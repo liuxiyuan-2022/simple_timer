@@ -49,7 +49,7 @@ class TimerStatusButton extends GetView<TimerStatusButtonController> {
                       ),
                       child: Icon(
                         Icons.close_rounded,
-                        size: size * .6,
+                        size: size * .5,
                         color: Colors.black,
                       ),
                     ),
@@ -93,7 +93,7 @@ class TimerStatusButton extends GetView<TimerStatusButtonController> {
                                 !TimerController.to.isTiming.value
                             ? Icons.play_arrow_rounded
                             : Icons.pause_rounded,
-                        size: size * .6,
+                        size: size * .5,
                         color: Colors.white,
                       ),
                     ),

@@ -13,6 +13,10 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    // 滑动手势触点坐标
+    double tapDown = 0;
+    double tapCancel = 0;
+
     return GetBuilder(
       init: HomeController(),
       builder: (_) {
@@ -26,34 +30,44 @@ class HomePage extends GetView<HomeController> {
               SettingsPage(),
             ],
           ),
-          bottomNavigationBar: DotNavigationBar(
-            currentIndex: SelectedTab.values.indexOf(controller.selectedTab),
-            onTap: controller.pageViewChanged,
-            selectedItemColor: ColorUtil.hex("#ef5562"),
-            unselectedItemColor: ColorUtil.hex("#939ba3"),
-            itemPadding: const EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 20,
+          bottomNavigationBar: GestureDetector(
+            // 监听导航栏滑动手势
+            onHorizontalDragDown: (e) => tapDown = e.localPosition.dx,
+            onHorizontalDragUpdate: (e) => tapCancel = e.localPosition.dx,
+            onHorizontalDragEnd: (e) {
+              double _offset = tapCancel - tapDown;
+              controller.pageViewSlideChanged(_offset);
+              printInfo(info: '$_offset');
+            },
+            child: DotNavigationBar(
+              currentIndex: SelectedTab.values.indexOf(controller.selectedTab),
+              onTap: controller.pageViewChanged,
+              selectedItemColor: ColorUtil.hex("#ef5562"),
+              unselectedItemColor: ColorUtil.hex("#939ba3"),
+              itemPadding: const EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 20,
+              ),
+              items: [
+                DotNavigationBarItem(
+                  icon: const FaIcon(FontAwesomeIcons.solidHourglass),
+                ),
+                DotNavigationBarItem(
+                  icon: const FaIcon(FontAwesomeIcons.stopwatch),
+                ),
+                DotNavigationBarItem(
+                  icon: const FaIcon(FontAwesomeIcons.gear),
+                ),
+              ],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(.1),
+                  offset: const Offset(0, 2),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                )
+              ],
             ),
-            items: [
-              DotNavigationBarItem(
-                icon: const FaIcon(FontAwesomeIcons.solidHourglass),
-              ),
-              DotNavigationBarItem(
-                icon: const FaIcon(FontAwesomeIcons.stopwatch),
-              ),
-              DotNavigationBarItem(
-                icon: const FaIcon(FontAwesomeIcons.gear),
-              ),
-            ],
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(.1),
-                offset: const Offset(0, 2),
-                spreadRadius: 2,
-                blurRadius: 10,
-              )
-            ],
           ).paddingOnly(bottom: 10),
         );
       },

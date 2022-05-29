@@ -106,7 +106,6 @@ class TimerPicker extends GetView<TimerController> {
                   },
                 ),
                 Text('秒', style: _theme.textTheme.subtitle1),
-                // .marginOnly(right: 20),
               ],
             ),
           ],

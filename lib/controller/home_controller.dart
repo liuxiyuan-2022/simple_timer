@@ -5,13 +5,27 @@ class HomeController extends GetxController {
   var selectedTab = SelectedTab.home;
   var pageController = PageController();
 
+  void pageViewSlideChanged(double direction) {
+    int index = SelectedTab.values.indexOf(selectedTab);
+    if (direction > 0) {
+      // 右滑
+      if (index > 0) {
+        pageViewChanged(index - 1);
+      }
+    } else if (direction < 0) {
+      // 左滑
+      if (index < SelectedTab.values.length - 1) {
+        pageViewChanged(index + 1);
+      }
+    }
+  }
+
   void pageViewChanged(int i) {
     pageController.animateToPage(
       i,
       duration: const Duration(milliseconds: 3),
       curve: const Threshold(0.1),
     );
-
     selectedTab = SelectedTab.values[i];
     update();
   }
