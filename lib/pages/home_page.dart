@@ -37,7 +37,6 @@ class HomePage extends GetView<HomeController> {
             onHorizontalDragEnd: (e) {
               double _offset = tapCancel - tapDown;
               controller.pageViewSlideChanged(_offset);
-              printInfo(info: '$_offset');
             },
             child: DotNavigationBar(
               currentIndex: SelectedTab.values.indexOf(controller.selectedTab),

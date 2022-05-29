@@ -10,10 +10,6 @@ class TimerPicker extends GetView<TimerController> {
 
   @override
   Widget build(BuildContext context) {
-    int _second = 0;
-    int _minute = 0;
-    int _hour = 0;
-
     ThemeData _theme = Theme.of(context).copyWith(
       textTheme: TextTheme(
         // selectedTextStyle
@@ -54,15 +50,12 @@ class TimerPicker extends GetView<TimerController> {
                   itemWidth: 70,
 
                   // 避免计时时继续刷新此组件
-                  value: TimerController.to.isTiming.value
-                      ? _hour
-                      : TimerController.to.timerHour.value,
+                  value: TimerController.to.timerHour.value,
                   selectedTextStyle: _theme.textTheme.headline1,
                   textStyle: _theme.textTheme.headline2,
                   infiniteLoop: true,
                   onChanged: (value) {
-                    _hour = value;
-                    TimerController.to.updateTimerPicker(value, 'h');
+                    TimerController.to.timerHour.value = value;
                   },
                 ),
                 Text('时', style: _theme.textTheme.subtitle1)
@@ -74,15 +67,12 @@ class TimerPicker extends GetView<TimerController> {
                   maxValue: 59,
                   zeroPad: true,
                   itemWidth: 70,
-                  value: TimerController.to.isTiming.value
-                      ? _minute
-                      : TimerController.to.timerMinute.value,
+                  value: TimerController.to.timerMinute.value,
                   selectedTextStyle: _theme.textTheme.headline1,
                   textStyle: _theme.textTheme.headline2,
                   infiniteLoop: true,
                   onChanged: (value) {
-                    _minute = value;
-                    TimerController.to.updateTimerPicker(value, 'm');
+                    TimerController.to.timerMinute.value = value;
                   },
                 ),
                 Text('分', style: _theme.textTheme.subtitle1)
@@ -94,15 +84,12 @@ class TimerPicker extends GetView<TimerController> {
                   maxValue: 59,
                   zeroPad: true,
                   itemWidth: 70,
-                  value: TimerController.to.isTiming.value
-                      ? _second
-                      : TimerController.to.timerSecond.value,
+                  value: TimerController.to.timerSecond.value,
                   selectedTextStyle: _theme.textTheme.headline1,
                   textStyle: _theme.textTheme.headline2,
                   infiniteLoop: true,
                   onChanged: (value) {
-                    _second = value;
-                    TimerController.to.updateTimerPicker(value, 's');
+                    TimerController.to.timerSecond.value = value;
                   },
                 ),
                 Text('秒', style: _theme.textTheme.subtitle1),

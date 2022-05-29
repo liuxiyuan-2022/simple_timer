@@ -33,7 +33,7 @@ class TimerController extends GetxController
   var timerTitle = '洗衣服'.obs;
 
   // 计时器 - 秒
-  var timerSecond = 2.obs;
+  var timerSecond = 0.obs;
 
   // 计时器 - 分
   var timerMinute = 0.obs;
@@ -47,6 +47,9 @@ class TimerController extends GetxController
   @override
   void onInit() async {
     super.onInit();
+    // 初始化本地持久化
+    prefs = await SharedPreferences.getInstance();
+
     // 初始化tiemrScaleRing动画控制器
     animationController = AnimationController(
       vsync: this,
@@ -57,24 +60,8 @@ class TimerController extends GetxController
         .animate(animationController)
       ..addListener(() => update());
 
-    // 初始化本地持久化
-    prefs = await SharedPreferences.getInstance();
-  }
-
-  // 更新TimerPicker()组件
-  void updateTimerPicker(int value, String tag) {
-    switch (tag) {
-      case 's':
-        timerSecond.value = value;
-        break;
-      case 'm':
-        timerMinute.value = value;
-        break;
-      case 'h':
-        timerHour.value = value;
-        break;
-      default:
-    }
+    // 初始化计时时间
+    initTimer();
   }
 
   // 开始计时
@@ -120,7 +107,7 @@ class TimerController extends GetxController
       onEnded: () {
         stopTimer();
         timerNotification();
-        resetTimer();
+        initTimer();
         printInfo(info: '计时停止');
       },
     );
@@ -149,7 +136,7 @@ class TimerController extends GetxController
     isPauseTiming.value = false;
     stopWatchTimer.onExecute.add(StopWatchExecute.stop);
     animationController.forward();
-    resetTimer();
+    initTimer();
   }
 
   // 保存计时时间
@@ -160,10 +147,11 @@ class TimerController extends GetxController
     await prefs.setStringList('lastTimer', <String>[_h, _m, _s]);
   }
 
-  // 重置计时时间
-  void resetTimer() async {
-    List<String>? timeItems = prefs.getStringList('lastTimer');
-    timerHour.value = int.parse(timeItems![0]);
+  // 初始化计时时间
+  void initTimer() async {
+    List<String> timeItems =
+        prefs.getStringList('lastTimer') ?? ['0', '5', '0'];
+    timerHour.value = int.parse(timeItems[0]);
     timerMinute.value = int.parse(timeItems[1]);
     timerSecond.value = int.parse(timeItems[2]);
   }
@@ -259,7 +247,6 @@ class TimerController extends GetxController
               {
                 FlutterRingtonePlayer.stop();
                 _timer.cancel();
-                printInfo(info: '通知销毁');
                 break;
               }
             default:
