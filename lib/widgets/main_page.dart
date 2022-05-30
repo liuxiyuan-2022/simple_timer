@@ -19,16 +19,16 @@ class MainPage extends GetView {
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          appBarTitle,
-          style: const TextStyle(
+          '| ' + appBarTitle,
+          style: TextStyle(
             fontSize: 22,
-            color: Colors.black,
+            color: Theme.of(context).primaryColor,
             fontWeight: FontWeight.w700,
             height: 1.1,
           ),
         ).marginOnly(left: 10),
         actions: appBarActions,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
       ),
       body: SafeArea(
         child: child.marginOnly(top: 20),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:simple_timer/l10n/messages.dart';
 import 'package:simple_timer/pages/home_page.dart';
 import 'package:simple_timer/style/app_theme_data.dart';
 
@@ -20,6 +21,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      translations: Messages(), // 翻译类
+      locale: const Locale('zh', 'CN'),
       debugShowCheckedModeBanner: false,
       darkTheme: appThemeDataDark,
       theme: appThemeDataLight,

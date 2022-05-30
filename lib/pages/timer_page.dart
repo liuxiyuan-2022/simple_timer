@@ -18,10 +18,10 @@ class TimerPage extends GetView<TimerController> {
     Get.put(TimerController(), permanent: true); // 不销毁此控制器
 
     return MainPage(
-      appBarTitle: "| 计时器",
+      appBarTitle: "timer".tr,
       appBarActions: [
         IconButton(
-          onPressed: () => log("hello"),
+          onPressed: () {},
           icon: const FaIcon(FontAwesomeIcons.ellipsis),
         ).marginOnly(right: 10)
       ],
@@ -53,7 +53,7 @@ class TimerPage extends GetView<TimerController> {
               Visibility(
                 visible: controller.isTiming.value ? false : true,
                 child: const TimerPicker(),
-              ).marginOnly(top: 30),
+              ).marginOnly(top: 50),
               const Positioned(
                 child: TimerStatusButton(size: 60),
                 bottom: 20,

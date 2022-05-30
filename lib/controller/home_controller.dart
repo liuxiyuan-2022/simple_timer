@@ -1,9 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:simple_timer/controller/settings_controller.dart';
 
 class HomeController extends GetxController {
-  var selectedTab = SelectedTab.home;
+  SelectedTab selectedTab = SelectedTab.home;
   var pageController = PageController();
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    // 初始化设置控制器
+    Get.put(SettingsController());
+  }
 
   void pageViewSlideChanged(double offset) {
     int index = SelectedTab.values.indexOf(selectedTab);

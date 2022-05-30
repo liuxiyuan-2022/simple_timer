@@ -43,14 +43,14 @@ class TimerStatusButton extends GetView<TimerStatusButtonController> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         border: Border.all(
-                          color: ColorUtil.hex("#9f9f9f"),
+                          color: ColorUtil.hex("#9f9f9f").withOpacity(.5),
                           width: 1,
                         ),
                       ),
                       child: Icon(
                         Icons.close_rounded,
                         size: size * .5,
-                        color: Colors.black,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
@@ -84,8 +84,10 @@ class TimerStatusButton extends GetView<TimerStatusButtonController> {
                         color: TimerController.to.timerHour.value == 0 &&
                                 TimerController.to.timerMinute.value == 0 &&
                                 TimerController.to.timerSecond.value == 0
-                            ? ColorUtil.hex("#ef5562").withOpacity(.5)
-                            : ColorUtil.hex("#ef5562"),
+                            ? Theme.of(context)
+                                .toggleableActiveColor
+                                .withOpacity(.5)
+                            : Theme.of(context).toggleableActiveColor,
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Icon(
@@ -94,7 +96,7 @@ class TimerStatusButton extends GetView<TimerStatusButtonController> {
                             ? Icons.play_arrow_rounded
                             : Icons.pause_rounded,
                         size: size * .5,
-                        color: Colors.white,
+                        color: Theme.of(context).scaffoldBackgroundColor,
                       ),
                     ),
                   ),

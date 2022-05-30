@@ -57,7 +57,7 @@ class StopWatchStatusButton extends GetView<StopWatchStatusButtonController> {
                               ? FontAwesomeIcons.arrowRotateRight
                               : FontAwesomeIcons.solidFlag,
                           size: size * .3,
-                          color: Colors.black,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ),
@@ -84,7 +84,7 @@ class StopWatchStatusButton extends GetView<StopWatchStatusButtonController> {
                     width: size,
                     height: size,
                     decoration: BoxDecoration(
-                      color: ColorUtil.hex("#ef5562"),
+                      color: Theme.of(context).toggleableActiveColor,
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: Icon(
@@ -93,7 +93,7 @@ class StopWatchStatusButton extends GetView<StopWatchStatusButtonController> {
                           ? Icons.play_arrow_rounded
                           : Icons.pause_rounded,
                       size: size * .5,
-                      color: Colors.white,
+                      color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                   ),
                 ),

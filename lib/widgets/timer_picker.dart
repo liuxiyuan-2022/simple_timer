@@ -13,9 +13,9 @@ class TimerPicker extends GetView<TimerController> {
     ThemeData _theme = Theme.of(context).copyWith(
       textTheme: TextTheme(
         // selectedTextStyle
-        headline1: const TextStyle(
+        headline1: TextStyle(
           fontSize: 40,
-          color: Colors.black,
+          color: Theme.of(context).primaryColor,
           fontWeight: FontWeight.bold,
         ),
 
@@ -26,10 +26,10 @@ class TimerPicker extends GetView<TimerController> {
         ),
 
         // 时分秒文字
-        subtitle1: const TextStyle(
+        subtitle1: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w100,
-          color: Colors.black,
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );

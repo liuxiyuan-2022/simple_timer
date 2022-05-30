@@ -108,7 +108,6 @@ class TimerController extends GetxController
         stopTimer();
         timerNotification();
         initTimer();
-        printInfo(info: '计时停止');
       },
     );
 
@@ -171,6 +170,7 @@ class TimerController extends GetxController
       },
     );
 
+    // 显示Snackbar
     Get.showSnackbar(
       GetSnackBar(
         titleText: Obx(
@@ -241,12 +241,16 @@ class TimerController extends GetxController
               }
             case SnackbarStatus.CLOSED:
               {
+                // 如果开启手势控制, 须在此时调用关闭通知铃声
+                FlutterRingtonePlayer.stop();
+                _timer.cancel();
                 break;
               }
             case SnackbarStatus.CLOSING:
               {
-                FlutterRingtonePlayer.stop();
-                _timer.cancel();
+                // FlutterRingtonePlayer.stop();
+                // _timer.cancel();
+                printInfo(info: 'CLOSING');
                 break;
               }
             default:

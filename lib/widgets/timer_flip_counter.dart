@@ -2,6 +2,7 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
+import 'package:simple_timer/controller/settings_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
 
 class TimerFlipCounter extends GetView<TimerController> {
@@ -20,23 +21,6 @@ class TimerFlipCounter extends GetView<TimerController> {
   Widget build(BuildContext context) {
     var controller = Get.put(TimerController());
 
-    ThemeData themeData = Theme.of(context).copyWith(
-      textTheme: TextTheme(
-        subtitle1: TextStyle(
-          color: titleColor,
-          fontWeight: FontWeight.w700,
-          fontSize: size / 3,
-          letterSpacing: 5,
-          height: 1.1,
-        ),
-        headline1: TextStyle(
-          fontSize: size,
-          fontWeight: FontWeight.w700,
-          color: timeColor,
-        ),
-      ),
-    );
-
     return Obx(
       () => Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +29,13 @@ class TimerFlipCounter extends GetView<TimerController> {
           // 计时器标题
           Text(
             controller.timerTitle.value,
-            style: themeData.textTheme.subtitle1,
+            style: TextStyle(
+              color: titleColor,
+              fontWeight: FontWeight.w700,
+              fontSize: size / 3,
+              letterSpacing: 5,
+              height: 1.1,
+            ),
           ).marginOnly(bottom: 30),
 
           Row(
@@ -57,9 +47,24 @@ class TimerFlipCounter extends GetView<TimerController> {
                 curve: Curves.easeOutBack,
                 value: controller.timerHour.value, // pass in a value like 2014
                 wholeDigits: 2,
-                textStyle: themeData.textTheme.headline1,
+                textStyle: TextStyle(
+                  fontSize: size,
+                  fontWeight: FontWeight.w700,
+                  color: SettingsController.to.isDarkMode.value
+                      ? Theme.of(context).primaryColor
+                      : timeColor,
+                ),
               ),
-              Text(' : ', style: themeData.textTheme.headline1),
+              Text(
+                ' : ',
+                style: TextStyle(
+                  fontSize: size,
+                  fontWeight: FontWeight.w700,
+                  color: SettingsController.to.isDarkMode.value
+                      ? Theme.of(context).primaryColor
+                      : timeColor,
+                ),
+              ),
               // 分
               AnimatedFlipCounter(
                 duration: const Duration(milliseconds: 500),
@@ -67,9 +72,24 @@ class TimerFlipCounter extends GetView<TimerController> {
                 value:
                     controller.timerMinute.value, // pass in a value like 2014
                 wholeDigits: 2,
-                textStyle: themeData.textTheme.headline1,
+                textStyle: TextStyle(
+                  fontSize: size,
+                  fontWeight: FontWeight.w700,
+                  color: SettingsController.to.isDarkMode.value
+                      ? Theme.of(context).primaryColor
+                      : timeColor,
+                ),
               ),
-              Text(' : ', style: themeData.textTheme.headline1),
+              Text(
+                ' : ',
+                style: TextStyle(
+                  fontSize: size,
+                  fontWeight: FontWeight.w700,
+                  color: SettingsController.to.isDarkMode.value
+                      ? Theme.of(context).primaryColor
+                      : timeColor,
+                ),
+              ),
               // 秒
               AnimatedFlipCounter(
                 duration: const Duration(milliseconds: 500),
@@ -77,7 +97,13 @@ class TimerFlipCounter extends GetView<TimerController> {
                 value:
                     controller.timerSecond.value, // pass in a value like 2014
                 wholeDigits: 2,
-                textStyle: themeData.textTheme.headline1,
+                textStyle: TextStyle(
+                  fontSize: size,
+                  fontWeight: FontWeight.w700,
+                  color: SettingsController.to.isDarkMode.value
+                      ? Theme.of(context).primaryColor
+                      : timeColor,
+                ),
               ),
             ],
           ),

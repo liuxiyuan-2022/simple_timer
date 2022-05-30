@@ -39,6 +39,7 @@ class HomePage extends GetView<HomeController> {
               controller.pageViewSlideChanged(_offset);
             },
             child: DotNavigationBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               currentIndex: SelectedTab.values.indexOf(controller.selectedTab),
               onTap: controller.pageViewChanged,
               selectedItemColor: ColorUtil.hex("#ef5562"),
