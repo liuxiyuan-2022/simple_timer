@@ -55,8 +55,8 @@ class TimerPage extends GetView<TimerController> {
                 child: const TimerPicker(),
               ).marginOnly(top: 50),
               const Positioned(
-                child: TimerStatusButton(size: 60),
-                bottom: 20,
+                child: TimerStatusButton(size: 70),
+                bottom: 30,
               ),
             ],
           ),

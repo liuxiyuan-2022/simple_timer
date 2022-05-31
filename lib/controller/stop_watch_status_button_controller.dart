@@ -48,7 +48,7 @@ class StopWatchStatusButtonController extends GetxController {
       StopWatchController.to.resetTimer();
     } else if (StopWatchController.to.isTiming.value) {
       // 标记当前时间
-      StopWatchController.to.flagTimer();
+      StopWatchController.to.recordLapTime();
     }
     flagBtnScale.value = 1;
   }

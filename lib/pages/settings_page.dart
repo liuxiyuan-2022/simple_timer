@@ -86,7 +86,8 @@ class SettingsPage extends GetView<SettingsController> {
                       actions: [
                         Obx(
                           () => Text(
-                            controller.languageTag.value,
+                            controller.languageTitleList[AppLanguage.values
+                                .indexOf(controller.language.value)],
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey[400],

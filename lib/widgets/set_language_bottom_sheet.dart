@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/controller/settings_controller.dart';
 
@@ -10,54 +11,70 @@ class SetLanguageBottomSheet extends GetView<SettingsController> {
     Get.put(SettingsController());
 
     return Container(
-      width: 100,
-      height: 150,
+      height: 200,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(15),
-          topRight: Radius.circular(15),
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
       ),
-      child: ListView(
-        padding: const EdgeInsets.all(20),
+      child: Column(
         children: [
-          InkWell(
-            onTap: () {
-              controller.changeLanguage(AppLanguage.zh_CN);
-              Get.back();
-            },
-            child: SizedBox(
-              height: 30,
-              child: Row(
-                children: [
-                  Text(
-                    "简体中文",
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ),
-                ],
-              ),
+          Text(
+            'set_Language'.tr,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
             ),
-          ),
-          const Divider(),
-          InkWell(
-            onTap: () {
-              controller.changeLanguage(AppLanguage.en_US);
-              Get.back();
-            },
-            child: SizedBox(
-              height: 30,
-              child: Row(
+          ).marginOnly(bottom: 25),
+          // 可选语言列表
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: AppLanguage.values.length,
+            itemExtent: 50,
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            itemBuilder: (BuildContext context, int index) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    "English",
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  InkWell(
+                    onTap: () {
+                      controller.changeLanguage(AppLanguage.values[index]);
+                      Get.back();
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          controller.languageTitleList[index],
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 16,
+                            // fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Opacity(
+                          opacity: controller.language.value ==
+                                  AppLanguage.values[index]
+                              ? 1
+                              : 0,
+                          child: FaIcon(
+                            FontAwesomeIcons.check,
+                            color: Theme.of(context).toggleableActiveColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  Divider(color: Colors.grey[400]),
                 ],
-              ),
-            ),
+              );
+            },
           ),
-          const Divider(),
         ],
       ),
     );

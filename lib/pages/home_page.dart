@@ -1,4 +1,3 @@
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -7,6 +6,7 @@ import 'package:simple_timer/controller/home_controller.dart';
 import 'package:simple_timer/pages/stop_watch_page.dart';
 import 'package:simple_timer/pages/settings_page.dart';
 import 'package:simple_timer/pages/timer_page.dart';
+import 'package:simple_timer/widgets/do_navigation_bar.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({Key? key}) : super(key: key);
@@ -48,6 +48,7 @@ class HomePage extends GetView<HomeController> {
                 vertical: 5,
                 horizontal: 20,
               ),
+              dotIndicatorColor: Colors.transparent,
               items: [
                 DotNavigationBarItem(
                   icon: const FaIcon(FontAwesomeIcons.solidHourglass),

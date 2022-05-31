@@ -8,11 +8,17 @@ class SettingsController extends GetxController {
 
   late SharedPreferences prefs;
 
-  // 夜间模式
+  /// 夜间模式
   var isDarkMode = false.obs;
 
-  // 语言
-  var languageTag = ''.obs;
+  /// Locale标签列表 ['zh_CN', 'en_US']
+  var languageTagList = ['zh_CN', 'en_US'];
+
+  /// app语言名称列表 ['简体中文', 'English']
+  var languageTitleList = ['简体中文', 'English'].obs;
+
+  /// 当前app语言 默认值: [AppLanguage.zh_CN]
+  var language = AppLanguage.zh_CN.obs;
 
   @override
   void onInit() async {
@@ -22,7 +28,7 @@ class SettingsController extends GetxController {
     initAppLanguage();
   }
 
-  // 切换深色主题
+  /// 切换深色主题
   void changeMode(bool _isDarkMode) async {
     isDarkMode.value = _isDarkMode;
 
@@ -30,50 +36,35 @@ class SettingsController extends GetxController {
     await prefs.setBool('isDarkMode', _isDarkMode);
   }
 
-  // 初始化深色主题
+  /// 初始化深色主题
   void initDarkMode() {
     bool _isDarkMode = prefs.getBool('isDarkMode') ?? false;
     changeMode(_isDarkMode);
   }
 
-  // 切换语言
+  /// 切换语言
   void changeLanguage(AppLanguage appLanguage) async {
-    late String _locale;
-    switch (appLanguage) {
-      case AppLanguage.zh_CN:
-        _locale = 'zh_CN';
-        languageTag.value = '简体中文';
-        break;
-      case AppLanguage.en_US:
-        _locale = 'en_US';
-        languageTag.value = 'Engilsh';
-        break;
-      default:
-    }
+    String _locale = languageTagList[AppLanguage.values.indexOf(appLanguage)];
+    language.value = appLanguage;
     Get.updateLocale(
       Locale(_locale.split('_')[0], _locale.split('_')[1]),
     );
+
     await prefs.setString('language', _locale);
   }
 
-  // 初始化App语言设置
+  /// 初始化App语言设置
   void initAppLanguage() {
-    /// 默认中文: [zh_CN]
-    String _appLanguage = prefs.getString('language') ?? 'zh_CN';
+    // 默认中文: [zh_CN]
+    String _localeTag = prefs.getString('language') ?? 'zh_CN';
+    language.value = AppLanguage.values[languageTagList.indexOf(_localeTag)];
     Get.updateLocale(
-      Locale(_appLanguage.split('_')[0], _appLanguage.split('_')[1]),
+      Locale(_localeTag.split('_')[0], _localeTag.split('_')[1]),
     );
-
-    switch (_appLanguage) {
-      case 'zh_CN':
-        languageTag.value = '简体中文';
-        break;
-      case 'en_US':
-        languageTag.value = 'English';
-        break;
-      default:
-    }
   }
+
+  /// 检查版本更新
+  void checkUpdates() async {}
 }
 
 /// 语言列表 默认值[AppLanguage.zh_CN]

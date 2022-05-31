@@ -6,6 +6,7 @@ import 'package:simple_timer/common/color_util.dart';
   ColorUtil.hex("#939ba3"),
   ColorUtil.hex("#ef5562"),
   ColorUtil.hex("#34384a"),
+  Colors.grey[400],
 */
 
 ThemeData appThemeDataLight = ThemeData(
@@ -46,7 +47,7 @@ ThemeData appThemeDataLight = ThemeData(
       borderRadius: BorderRadius.circular(15),
     ),
     shadowColor: Colors.grey.withOpacity(.2),
-    elevation: 10,
+    elevation: 5,
   ),
 );
 
@@ -58,7 +59,8 @@ ThemeData appThemeDataDark = appThemeDataLight.copyWith(
       statusBarIconBrightness: Brightness.light,
     ),
   ),
-  cardColor: Colors.grey.withOpacity(.1),
+  // cardColor: Colors.grey.withOpacity(.1),
+  cardColor: ColorUtil.hex("#141414"),
   cardTheme: CardTheme(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(15),

@@ -30,7 +30,7 @@ class TimerController extends GetxController
   var isPauseTiming = false.obs;
 
   // 当前计时器标题
-  var timerTitle = '洗衣服'.obs;
+  var timerTitle = '计时器'.obs;
 
   // 计时器 - 秒
   var timerSecond = 0.obs;
@@ -133,7 +133,7 @@ class TimerController extends GetxController
   void stopTimer() {
     isTiming.value = false;
     isPauseTiming.value = false;
-    stopWatchTimer.onExecute.add(StopWatchExecute.stop);
+    stopWatchTimer.onExecute.add(StopWatchExecute.reset);
     animationController.forward();
     initTimer();
   }

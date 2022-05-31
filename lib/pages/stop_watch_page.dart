@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:simple_timer/controller/stop_watch_controller.dart';
 import 'package:simple_timer/widgets/main_page.dart';
 import 'package:simple_timer/widgets/stop_watch_counter.dart';
+import 'package:simple_timer/widgets/stop_watch_lap_list.dart';
 import 'package:simple_timer/widgets/stop_watch_status_button.dart';
 
 class StopWatchPage extends GetView<StopWatchController> {
@@ -14,14 +15,27 @@ class StopWatchPage extends GetView<StopWatchController> {
     return MainPage(
       appBarTitle: 'stop_watch'.tr,
       child: Stack(
-        children: const [
+        children: [
           Positioned(
-            child: StopWatchCounter(size: 60),
-            top: 100,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(
+                  () => AnimatedSlide(
+                      offset:
+                          Offset(0, controller.lapTimeList.isEmpty ? 0 : -0.7),
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                      child: const StopWatchCounter(size: 60)),
+                ),
+                const StopWatchLapList(),
+              ],
+            ),
+            top: 125,
           ),
-          Positioned(
-            child: StopWatchStatusButton(size: 60),
-            bottom: 20,
+          const Positioned(
+            child: StopWatchStatusButton(size: 70),
+            bottom: 30,
           ),
         ],
       ),
