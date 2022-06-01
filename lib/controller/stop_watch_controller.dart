@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -28,6 +29,12 @@ class StopWatchController extends GetxController {
 
   /// 预置初始时间
   var lapPresetTime = 0.obs;
+
+  /// 插入lapTime时更新List
+  var lapListglobalKey = GlobalKey<AnimatedListState>().obs;
+
+  /// lapList滚动控制器
+  var lapListScrollController = ScrollController().obs;
 
   @override
   void onInit() async {
@@ -70,8 +77,6 @@ class StopWatchController extends GetxController {
         _timerSecond = int.parse(StopWatchTimer.getDisplayTimeSecond(v));
         _timerMinute = int.parse(StopWatchTimer.getDisplayTimeMinute(v));
         lapPresetTime.value = StopWatchTimer.getRawSecond(v) * 1000;
-        // update(['stop_watch_ms'], timerMillSecond.value % 10 % 2 == 1);
-        // printInfo(info: '${timerMillSecond.value % 10 % 2}');
 
         await prefs.setInt('lapPresetTime', lapPresetTime.value);
       },
@@ -117,8 +122,18 @@ class StopWatchController extends GetxController {
     String lapTime =
         '${timerMinute.toString().padLeft(2, '0')}:${timerSecond.toString().padLeft(2, '0')}.${timerMillSecond.toString().padLeft(2, '0')}';
 
+    // 插入数据并通知组件更新
     lapTimeList.insert(0, lapTime);
+    lapListglobalKey.value.currentState
+        ?.insertItem(0, duration: const Duration(milliseconds: 200));
     countLapInterval();
+
+    // 滚动列表到最顶部
+    lapListScrollController.value.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOutExpo,
+    );
 
     await prefs.setStringList('lapTimeList', lapTimeList);
     await prefs.setStringList('lapIntervalList', lapIntervalList);

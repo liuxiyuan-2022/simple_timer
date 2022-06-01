@@ -24,41 +24,56 @@ class StopWatchLapList extends GetView<StopWatchController> {
         child: SizedBox(
           height: 250,
           width: context.width - 125,
-          child: ListView.builder(
-            itemCount: controller.lapTimeList.length,
-            itemExtent: 40,
-            itemBuilder: (BuildContext context, int index) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // 序号
-                  Text(
-                    (controller.lapTimeList.length - index)
-                        .toString()
-                        .padLeft(2, '0'),
-                    style: _tetxStyle.copyWith(
-                      color: Theme.of(context).primaryColor,
+          child: AnimatedList(
+            key: controller.lapListglobalKey.value,
+            initialItemCount: controller.lapTimeList.length,
+            controller: controller.lapListScrollController.value,
+            itemBuilder: (context, index, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SizeTransition(
+                  sizeFactor: animation,
+                  child: SizedBox(
+                    height: 40,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // 序号
+                        // 01....
+                        Text(
+                          (controller.lapTimeList.length - index)
+                              .toString()
+                              .padLeft(2, '0'),
+                          style: _tetxStyle.copyWith(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        const Expanded(
+                            child: SizedBox(width: double.maxFinite)),
+
+                        // 单圈时间间隔
+                        // +00:00.00
+                        Text('+${controller.lapIntervalList[index]}',
+                            style: _tetxStyle),
+                        const Expanded(
+                            child: SizedBox(width: double.maxFinite)),
+
+                        // 单圈时间
+                        // 00:00.00
+                        Text(
+                          controller.lapTimeList[index].split('.')[0] + '.',
+                          style: _tetxStyle.copyWith(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        Text(
+                          controller.lapTimeList[index].split('.')[1],
+                          style: _tetxStyle,
+                        )
+                      ],
                     ),
                   ),
-                  const Expanded(child: SizedBox(width: double.maxFinite)),
-
-                  // 单圈时间间隔
-                  Text('+${controller.lapIntervalList[index]}',
-                      style: _tetxStyle),
-                  const Expanded(child: SizedBox(width: double.maxFinite)),
-
-                  // 单圈时间
-                  Text(
-                    controller.lapTimeList[index].split('.')[0] + '.',
-                    style: _tetxStyle.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  Text(
-                    controller.lapTimeList[index].split('.')[1],
-                    style: _tetxStyle,
-                  )
-                ],
+                ),
               );
             },
           ),

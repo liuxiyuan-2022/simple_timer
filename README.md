@@ -23,15 +23,18 @@
 
 ---
 
-**开发版**
+2022.6.2
+
+- <font color=#70c000>新增</font>  单圈计时列表动画
 
 2022.6.1
 
 - <font color=#dbc693>修复</font>  秒表重置bug
+- <font color=#dbc693>修复</font>  秒表毫秒值刷新过快
 
 2022.5.31
 
-- <font color=#70c000>新增</font>  秒表圈数计时
+- <font color=#70c000>新增</font>  秒表单圈计时
 - <font color=##a1c6c9>优化</font>  UI改进
 
 2022.5.30
