@@ -12,6 +12,7 @@ class StopWatchPage extends GetView<StopWatchController> {
   @override
   Widget build(BuildContext context) {
     Get.put(StopWatchController(), permanent: true); // 不消毁此控制器
+
     return MainPage(
       appBarTitle: 'stop_watch'.tr,
       child: Stack(

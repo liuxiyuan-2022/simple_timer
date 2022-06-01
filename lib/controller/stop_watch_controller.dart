@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -10,7 +8,7 @@ class StopWatchController extends GetxController {
   late SharedPreferences prefs;
 
   // 计时控制器
-  var stopWatchTimer = StopWatchTimer();
+  late StopWatchTimer stopWatchTimer;
 
   var timerMinute = 0.obs;
   var timerSecond = 0.obs;
@@ -28,8 +26,8 @@ class StopWatchController extends GetxController {
   /// 单圈时间间隔列表
   var lapIntervalList = <String>[].obs;
 
-  /// 单圈计时序号
-  var lapIndex = 0;
+  /// 预置初始时间
+  var lapPresetTime = 0.obs;
 
   @override
   void onInit() async {
@@ -38,25 +36,40 @@ class StopWatchController extends GetxController {
     initLapTimeList();
   }
 
+  /// 初始化时间
+  void initLapTimeList() {
+    lapTimeList.value = prefs.getStringList('lapTimeList') ?? [];
+    lapIntervalList.value = prefs.getStringList('lapIntervalList') ?? [];
+    lapPresetTime.value = prefs.getInt('lapPresetTime') ?? 0;
+    timerMinute.value =
+        int.parse(formatTime(lapPresetTime.value).substring(0, 2));
+    timerSecond.value =
+        int.parse(formatTime(lapPresetTime.value).substring(3, 5));
+    timerMillSecond.value =
+        int.parse(formatTime(lapPresetTime.value).substring(6, 8));
+  }
+
   /// 开始计时
   void startTimer() {
     late int _timerSecond;
     late int _timerMinute;
-
     isTiming.value = true;
     // 创建计时器控制器
     stopWatchTimer = StopWatchTimer(
-      onChange: (v) {
+      isLapHours: false,
+      onChange: (v) async {
         timerMillSecond.value =
             int.parse(StopWatchTimer.getDisplayTimeMillisecond(v));
         _timerSecond = int.parse(StopWatchTimer.getDisplayTimeSecond(v));
         _timerMinute = int.parse(StopWatchTimer.getDisplayTimeMinute(v));
+        lapPresetTime.value = StopWatchTimer.getRawSecond(v) * 1000;
+
+        await prefs.setInt('lapPresetTime', lapPresetTime.value);
       },
-      onChangeRawSecond: (v) {
-        timerSecond.value = _timerSecond;
-        timerMinute.value = _timerMinute;
-      },
+      onChangeRawSecond: (v) => timerSecond.value = _timerSecond,
+      onChangeRawMinute: (v) => timerMinute.value = _timerMinute,
     );
+    stopWatchTimer.setPresetTime(mSec: lapPresetTime.value);
     stopWatchTimer.onExecute.add(StopWatchExecute.start); // 启动计时器
   }
 
@@ -76,66 +89,82 @@ class StopWatchController extends GetxController {
   void resetTimer() async {
     isTiming.value = false;
     isPauseTiming.value = false;
-    stopWatchTimer.onExecute.add(StopWatchExecute.reset);
 
     lapTimeList.clear();
     lapIntervalList.clear();
-    lapIndex = 0;
-    await prefs.setStringList('lapTimeList', []);
-    await prefs.setStringList('lapIntervalList', []);
-    await prefs.setInt('lapIndex', 0);
+    lapPresetTime.value = 0;
+
+    stopWatchTimer.clearPresetTime();
+    stopWatchTimer.dispose();
+
+    await prefs.setInt('lapPresetTime', lapPresetTime.value);
+    await prefs.setStringList('lapTimeList', lapTimeList);
+    await prefs.setStringList('lapIntervalList', lapIntervalList);
   }
 
   /// 记录单圈时间
   void recordLapTime() async {
-    lapIndex++;
+    stopWatchTimer.onExecute.add(StopWatchExecute.lap);
     String lapTime =
         '${timerMinute.toString().padLeft(2, '0')}:${timerSecond.toString().padLeft(2, '0')}.${timerMillSecond.toString().padLeft(2, '0')}';
 
-    stopWatchTimer.onExecute.add(StopWatchExecute.lap);
-    lapTimeList.add(lapTime);
+    lapTimeList.insert(0, lapTime);
     countLapInterval();
-    lapTimeList.value = lapTimeList.reversed.toList();
-    lapIntervalList.value = lapIntervalList.reversed.toList();
 
     await prefs.setStringList('lapTimeList', lapTimeList);
     await prefs.setStringList('lapIntervalList', lapIntervalList);
-    await prefs.setInt('lapIndex', lapIndex);
-  }
-
-  /// 初始化单圈时间列表
-  void initLapTimeList() {
-    lapIndex = 0;
-    lapTimeList.value = prefs.getStringList('lapTimeList') ?? [];
-    lapIntervalList.value = prefs.getStringList('lapIntervalList') ?? [];
-    lapIndex = prefs.getInt('lapIndex') ?? 0;
   }
 
   /// 记录单圈时间间隔
   void countLapInterval() {
-    if (lapTimeList.length == 1) {
-      lapIntervalList.add('+00:00.00');
+    if (lapIntervalList.isEmpty) {
+      lapIntervalList.add('00:00.00');
     } else {
-      int lastLapTime =
-          int.parse(lapTimeList[lapIndex - 1].substring(0, 2)) * 60 * 1000 +
-              int.parse(lapTimeList[lapIndex - 1].substring(3, 5)) * 1000 +
-              int.parse(lapTimeList[lapIndex - 1].substring(6, 8));
+      int lastLapTime = int.parse(lapTimeList[1].substring(0, 2)) * 60 * 1000 +
+          int.parse(lapTimeList[1].substring(3, 5)) * 1000 +
+          int.parse(lapTimeList[1].split('.')[1]) * 10;
 
-      int nowLapTime =
-          int.parse(lapTimeList[lapIndex].substring(0, 2)) * 60 * 1000 +
-              int.parse(lapTimeList[lapIndex].substring(3, 5)) * 1000 +
-              int.parse(lapTimeList[lapIndex].substring(6, 8));
+      int nowLapTime = int.parse(lapTimeList[0].substring(0, 2)) * 60 * 1000 +
+          int.parse(lapTimeList[0].substring(3, 5)) * 1000 +
+          int.parse(lapTimeList[0].split('.')[1]) * 10;
 
       int _lapInterval = nowLapTime - lastLapTime;
-      formatTime(_lapInterval);
+
+      // 在列表首位插入
+      lapIntervalList.insert(0, formatTime(_lapInterval));
     }
   }
 
   /// 将毫秒转化为 分/秒/毫秒
-  void formatTime(int time) {}
+  String formatTime(int time) {
+    var millisecond = (time % 1000).truncate();
+    var second = 0;
+    var totalMinute = 0;
+    var minute = 0;
+    var result = "";
+    var totalSecond = (time / 1000).truncate(); // 3671
+    if (totalSecond > 59) {
+      // 总秒数大于59 需要计算总分钟 数
+      second = (totalSecond % 60).truncate(); // 11
+      totalMinute = (totalSecond / 60).truncate(); // 61
+    } else {
+      second = totalSecond;
+    }
+    if (totalMinute > 59) {
+      minute = (totalMinute % 60).truncate(); // 1
+    } else {
+      minute = totalMinute;
+    }
+
+    result += minute.toString().padLeft(2, '0');
+    result += ':' + second.toString().padLeft(2, '0');
+    result += "." + millisecond.toString().padLeft(3, '0').substring(0, 2);
+
+    return result;
+  }
 
   @override
-  void onClose() {
+  void onClose() async {
     super.onClose();
     stopWatchTimer.dispose();
   }

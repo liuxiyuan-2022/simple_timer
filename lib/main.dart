@@ -27,6 +27,9 @@ class MyApp extends StatelessWidget {
       darkTheme: appThemeDataDark,
       theme: appThemeDataLight,
       home: const HomePage(),
+      onDispose: () {
+        print('dis');
+      },
     );
   }
 }

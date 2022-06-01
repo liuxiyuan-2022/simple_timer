@@ -18,7 +18,9 @@ class StopWatchLapList extends GetView<StopWatchController> {
 
     return Obx(
       () => Visibility(
-        visible: controller.isTiming.value ? true : false,
+        visible: controller.isTiming.value || controller.lapTimeList.isNotEmpty
+            ? true
+            : false,
         child: SizedBox(
           height: 250,
           width: context.width - 125,
@@ -41,7 +43,8 @@ class StopWatchLapList extends GetView<StopWatchController> {
                   const Expanded(child: SizedBox(width: double.maxFinite)),
 
                   // 单圈时间间隔
-                  Text('+00:00.00', style: _tetxStyle),
+                  Text('+${controller.lapIntervalList[index]}',
+                      style: _tetxStyle),
                   const Expanded(child: SizedBox(width: double.maxFinite)),
 
                   // 单圈时间
