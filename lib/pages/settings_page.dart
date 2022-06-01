@@ -34,7 +34,7 @@ class SettingsPage extends GetView<SettingsController> {
                     */
                     SetOption(
                       leading: FontAwesomeIcons.solidBell,
-                      title: 'notification_bell'.tr,
+                      title: 'ringtone'.tr,
                       onTap: () {},
                     ),
                   ],

@@ -33,7 +33,6 @@
 
 - <font color=#70c000>新增</font>  秒表圈数计时
 - <font color=##a1c6c9>优化</font>  UI改进
-- 
 
 2022.5.30
 

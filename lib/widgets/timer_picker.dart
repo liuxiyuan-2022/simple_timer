@@ -58,7 +58,7 @@ class TimerPicker extends GetView<TimerController> {
                     TimerController.to.timerHour.value = value;
                   },
                 ),
-                Text('时', style: _theme.textTheme.subtitle1)
+                Text('timer_hour'.tr, style: _theme.textTheme.subtitle1)
                     .marginOnly(right: 20),
 
                 // 分钟
@@ -75,7 +75,7 @@ class TimerPicker extends GetView<TimerController> {
                     TimerController.to.timerMinute.value = value;
                   },
                 ),
-                Text('分', style: _theme.textTheme.subtitle1)
+                Text('timer_minute'.tr, style: _theme.textTheme.subtitle1)
                     .marginOnly(right: 20),
 
                 // 秒
@@ -92,7 +92,7 @@ class TimerPicker extends GetView<TimerController> {
                     TimerController.to.timerSecond.value = value;
                   },
                 ),
-                Text('秒', style: _theme.textTheme.subtitle1),
+                Text('timer_second'.tr, style: _theme.textTheme.subtitle1),
               ],
             ),
           ],

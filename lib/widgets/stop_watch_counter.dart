@@ -72,15 +72,19 @@ class StopWatchCounter extends GetView<StopWatchController> {
             ).marginOnly(left: 5, right: 5),
 
             // millsecond
-            Text(
-              controller.timerMillSecond.value.toString().padLeft(2, '0'),
-              style: TextStyle(
-                color: (controller.timerMillSecond.value == 0 &&
-                            !controller.isTiming.value) ||
-                        controller.isPauseTiming.value
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).primaryColor.withOpacity(.5),
-                fontSize: size,
+            GetBuilder(
+              id: 'stop_watch_ms',
+              init: StopWatchController(),
+              builder: (_) => Text(
+                controller.timerMillSecond.value.toString().padLeft(2, '0'),
+                style: TextStyle(
+                  color: (controller.timerMillSecond.value == 0 &&
+                              !controller.isTiming.value) ||
+                          controller.isPauseTiming.value
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).primaryColor.withOpacity(.5),
+                  fontSize: size,
+                ),
               ),
             ),
           ],

@@ -169,7 +169,7 @@ class TimerController extends GetxController
         _seconds.value++;
       },
     );
-
+    Get.closeAllSnackbars();
     // 显示Snackbar
     Get.showSnackbar(
       GetSnackBar(
@@ -250,7 +250,6 @@ class TimerController extends GetxController
               {
                 // FlutterRingtonePlayer.stop();
                 // _timer.cancel();
-                printInfo(info: 'CLOSING');
                 break;
               }
             default:

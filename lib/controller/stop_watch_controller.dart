@@ -34,6 +34,13 @@ class StopWatchController extends GetxController {
     super.onInit();
     prefs = await SharedPreferences.getInstance();
     initLapTimeList();
+
+    /// 节流 防止millsecond刷新过快
+    interval(
+      timerMillSecond,
+      (callback) => update(['stop_watch_ms']),
+      time: const Duration(milliseconds: 50),
+    );
   }
 
   /// 初始化时间
@@ -63,6 +70,8 @@ class StopWatchController extends GetxController {
         _timerSecond = int.parse(StopWatchTimer.getDisplayTimeSecond(v));
         _timerMinute = int.parse(StopWatchTimer.getDisplayTimeMinute(v));
         lapPresetTime.value = StopWatchTimer.getRawSecond(v) * 1000;
+        // update(['stop_watch_ms'], timerMillSecond.value % 10 % 2 == 1);
+        // printInfo(info: '${timerMillSecond.value % 10 % 2}');
 
         await prefs.setInt('lapPresetTime', lapPresetTime.value);
       },
