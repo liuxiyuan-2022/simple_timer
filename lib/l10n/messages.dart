@@ -21,6 +21,9 @@ class Messages extends Translations {
           'timer_hour': '时',
           'timer_minute': '分',
           'timer_second': '秒',
+          'already_the_latest_version': '已经是最新版本',
+          'has_stopped': '已到时',
+          'second_ago': '秒前',
         },
         'en_US': {
           'timer': 'Timer',
@@ -36,6 +39,9 @@ class Messages extends Translations {
           'timer_hour': 'H',
           'timer_minute': 'M',
           'timer_second': 'S',
+          'already_the_latest_version': 'Already the latest version',
+          'has_stopped': ' has stopped',
+          'second_ago': ' second ago',
         }
       };
 }

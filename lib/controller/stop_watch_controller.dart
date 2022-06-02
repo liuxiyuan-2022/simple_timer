@@ -124,8 +124,10 @@ class StopWatchController extends GetxController {
 
     // 插入数据并通知组件更新
     lapTimeList.insert(0, lapTime);
-    lapListglobalKey.value.currentState
-        ?.insertItem(0, duration: const Duration(milliseconds: 200));
+    lapListglobalKey.value.currentState?.insertItem(
+      0,
+      duration: const Duration(milliseconds: 200),
+    );
     countLapInterval();
 
     // 滚动列表到最顶部

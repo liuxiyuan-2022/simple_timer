@@ -7,41 +7,42 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_timer/common/color_util.dart';
+import 'package:simple_timer/common/get_notification.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class TimerController extends GetxController
     with GetSingleTickerProviderStateMixin {
   static TimerController get to => Get.find();
 
-  // 持久化
+  /// 持久化
   late SharedPreferences prefs;
 
-  // 倒计时控制器
+  /// 倒计时控制器
   var stopWatchTimer = StopWatchTimer();
 
-  // 计时刻度圆环动画控制器
+  /// 计时刻度圆环动画控制器
   late Animation animation;
   late AnimationController animationController;
 
-  // 是否正在计时
+  /// 是否正在计时
   var isTiming = false.obs;
 
-  // 是否暂停计时
+  /// 是否暂停计时
   var isPauseTiming = false.obs;
 
-  // 当前计时器标题
+  /// 当前计时器标题
   var timerTitle = '计时器'.obs;
 
-  // 计时器 - 秒
+  /// 计时器 - 秒
   var timerSecond = 0.obs;
 
-  // 计时器 - 分
+  /// 计时器 - 分
   var timerMinute = 0.obs;
 
-  // 计时器 - 小时
+  /// 计时器 - 小时
   var timerHour = 0.obs;
 
-  // 计时器总时长 /秒
+  /// 计时器总时长 /秒
   var totalTime = 0.obs;
 
   @override
@@ -64,12 +65,16 @@ class TimerController extends GetxController
     initTimer();
   }
 
-  // 开始计时
+  /// 开始计时
   void startTimer() {
     late int _timerSecond;
     late int _timerMinute;
     late int _timerHour;
     isTiming.value = true;
+
+    if (Get.isSnackbarOpen) {
+      Get.back();
+    }
 
     // 保存计时时间
     saveTimer();
@@ -106,7 +111,7 @@ class TimerController extends GetxController
       // 计时停止时调用:
       onEnded: () {
         stopTimer();
-        timerNotification();
+        GetNotification.showTimerToast();
         initTimer();
       },
     );
@@ -115,21 +120,21 @@ class TimerController extends GetxController
     animationController.repeat(); // 播放时刻环动画
   }
 
-  // 暂停计时
+  /// 暂停计时
   void pauseTimer() {
     isPauseTiming.value = true;
     stopWatchTimer.onExecute.add(StopWatchExecute.stop);
     animationController.forward();
   }
 
-  // 恢复计时
+  /// 恢复计时
   void resumeTimer() {
     isPauseTiming.value = false;
     stopWatchTimer.onExecute.add(StopWatchExecute.start);
     animationController.repeat();
   }
 
-  // 停止计时
+  /// 停止计时
   void stopTimer() {
     isTiming.value = false;
     isPauseTiming.value = false;
@@ -138,7 +143,7 @@ class TimerController extends GetxController
     initTimer();
   }
 
-  // 保存计时时间
+  /// 保存计时时间
   void saveTimer() async {
     String _h = timerHour.value.toString();
     String _m = timerMinute.value.toString();
@@ -146,7 +151,7 @@ class TimerController extends GetxController
     await prefs.setStringList('lastTimer', <String>[_h, _m, _s]);
   }
 
-  // 初始化计时时间
+  /// 初始化计时时间
   void initTimer() async {
     List<String> timeItems =
         prefs.getStringList('lastTimer') ?? ['0', '5', '0'];
@@ -155,109 +160,9 @@ class TimerController extends GetxController
     timerSecond.value = int.parse(timeItems[2]);
   }
 
-  // 将小时 + 分 + 秒 转化单位为 秒
+  /// 将小时 + 分 + 秒 转化单位为 秒
   int timerToSecond(int h, int m, int s) {
     return h * 60 * 60 + m * 60 + s;
-  }
-
-  // 计时结束通知
-  void timerNotification() {
-    var _seconds = 0.obs;
-    Timer _timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        _seconds.value++;
-      },
-    );
-    Get.closeAllSnackbars();
-    // 显示Snackbar
-    Get.showSnackbar(
-      GetSnackBar(
-        titleText: Obx(
-          () => Text(
-            '${timerTitle.value} 已到时',
-            style: const TextStyle(fontSize: 18, height: 1.1),
-          ),
-        ),
-        messageText: Obx(
-          () => Text(
-            '${_seconds.value}秒前',
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black,
-              height: 1.1,
-            ),
-          ),
-        ),
-        maxWidth: Get.width - 45,
-        margin: const EdgeInsets.only(top: 10),
-        padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
-        backgroundColor: Colors.white,
-        snackPosition: SnackPosition.TOP,
-        isDismissible: true, // 启用手势控制
-        dismissDirection: DismissDirection.horizontal, // 允许左右滑动关闭通知
-        onTap: (snack) => Get.back(),
-        borderRadius: 15,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(.1),
-            offset: const Offset(0, 2),
-            spreadRadius: 5,
-            blurRadius: 10,
-          ),
-        ],
-        mainButton: TextButton(
-          style: ButtonStyle(
-            overlayColor:
-                MaterialStateProperty.all(Colors.transparent), // 去除点击效果
-          ),
-          onPressed: () {
-            Get.back();
-          },
-          child: Text(
-            '确定',
-            style: TextStyle(
-              fontSize: 16,
-              color: ColorUtil.hex('#ef5562'),
-              height: 1.1,
-            ),
-          ),
-        ),
-        snackbarStatus: (status) {
-          switch (status) {
-            case SnackbarStatus.OPENING:
-              {
-                // 播放提示音
-                FlutterRingtonePlayer.play(
-                  looping: true,
-                  fromAsset: "assets/audio/notification_001.mp3",
-                );
-                _timer;
-                break;
-              }
-            case SnackbarStatus.OPEN:
-              {
-                break;
-              }
-            case SnackbarStatus.CLOSED:
-              {
-                // 如果开启手势控制, 须在此时调用关闭通知铃声
-                FlutterRingtonePlayer.stop();
-                _timer.cancel();
-                break;
-              }
-            case SnackbarStatus.CLOSING:
-              {
-                // FlutterRingtonePlayer.stop();
-                // _timer.cancel();
-                break;
-              }
-            default:
-              break;
-          }
-        },
-      ),
-    );
   }
 
   @override

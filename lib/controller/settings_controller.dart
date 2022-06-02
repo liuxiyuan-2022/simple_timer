@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_timer/common/get_notification.dart';
 import 'package:simple_timer/style/app_theme_data.dart';
 
 class SettingsController extends GetxController {
@@ -20,12 +21,16 @@ class SettingsController extends GetxController {
   /// 当前app语言 默认值: [AppLanguage.zh_CN]
   var language = AppLanguage.zh_CN.obs;
 
+  /// 是否是最新版本
+  var isLatestVersion = false.obs;
+
   @override
   void onInit() async {
     super.onInit();
     prefs = await SharedPreferences.getInstance();
     initDarkMode();
     initAppLanguage();
+    // checkUpdates();
   }
 
   /// 切换深色主题
@@ -64,7 +69,15 @@ class SettingsController extends GetxController {
   }
 
   /// 检查版本更新
-  void checkUpdates() async {}
+  void checkUpdates() async {
+    if (true) {
+      GetNotification.showToastSnakbar(
+        'already_the_latest_version',
+        minWidth: 135,
+        maxWidth: 200,
+      );
+    } else {}
+  }
 }
 
 /// 语言列表 默认值[AppLanguage.zh_CN]

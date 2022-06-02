@@ -75,7 +75,9 @@ class SettingsPage extends GetView<SettingsController> {
                       onTap: () {},
                     ),
 
-                    /// 语言
+                    /*
+                      语言
+                    */
                     SetOption(
                       leading: FontAwesomeIcons.language,
                       title: 'language'.tr,
@@ -114,10 +116,10 @@ class SettingsPage extends GetView<SettingsController> {
                     SetOption(
                       leading: FontAwesomeIcons.earthAsia,
                       title: 'check_updates'.tr,
-                      onTap: () {},
+                      onTap: () => controller.checkUpdates(),
                       actions: [
                         Visibility(
-                          visible: true,
+                          visible: !controller.isLatestVersion.value,
                           child: Container(
                             width: 8,
                             height: 8,
