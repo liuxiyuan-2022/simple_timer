@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
+import 'package:simple_timer/controller/settings_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
 
 /// 自定义Get的通知组件[GetSnackBar()]
@@ -16,6 +17,7 @@ class GetNotification {
     required double maxWidth,
     required double minWidth,
   }) {
+    Get.closeAllSnackbars();
     return Get.showSnackbar(
       GetSnackBar(
         messageText: Center(
@@ -47,6 +49,89 @@ class GetNotification {
     );
   }
 
+  /// GetbottomSheet
+  static Future<T?> showBottomSheet<T>({
+    required String title,
+    String? message,
+    String? confirmTitle,
+    String? cancelTitle,
+    Function()? confirmOnTap,
+    Function()? cancelOnTap,
+  }) {
+    // var controller = Get.put(SettingsController());
+    return Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          color: Theme.of(Get.context!).cardColor,
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 标题
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(Get.context!).primaryColor,
+              ),
+            ).marginOnly(top: 15, bottom: 20),
+            Text(
+              message ?? '',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+              ),
+            ).marginOnly(bottom: 25),
+
+            TextButton(
+              onPressed: confirmOnTap,
+              child: Container(
+                width: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  border: Border.all(
+                    color: Theme.of(Get.context!).toggleableActiveColor,
+                    width: 3,
+                  ),
+                ),
+                child: Text(
+                  confirmTitle ?? 'confirm'.tr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(Get.context!).toggleableActiveColor,
+                    fontSize: 16,
+                    height: 1.1,
+                  ),
+                ).marginOnly(top: 15, bottom: 15),
+              ),
+              style: ButtonStyle(
+                overlayColor: MaterialStateProperty.all(Colors.transparent),
+              ),
+            ).marginOnly(bottom: 5),
+            TextButton(
+              onPressed: cancelOnTap ?? () => Get.back(),
+              child: SizedBox(
+                width: 200,
+                child: Text(
+                  cancelTitle ?? 'cancel'.tr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(Get.context!).primaryColor,
+                    fontSize: 16,
+                    height: 1.1,
+                  ),
+                ),
+              ).paddingOnly(top: 15, bottom: 15),
+            ),
+          ],
+        ),
+      ).marginOnly(left: 30, right: 30, bottom: 25),
+    );
+  }
+
   ///  计时结束通知
   static SnackbarController showTimerToast() {
     var controller = Get.put(TimerController());
@@ -64,7 +149,7 @@ class GetNotification {
             controller.timerTitle.value + 'has_stopped'.tr,
             style: TextStyle(
               color: Theme.of(Get.context!).primaryColor,
-              fontSize: 18,
+              fontSize: 16,
               height: 1.1,
             ),
           ),

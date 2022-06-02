@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MainPage extends GetView {
-  const MainPage({
+class MainPageTemplate extends StatelessWidget {
+  const MainPageTemplate({
     Key? key,
-    required this.child,
     this.appBarTitle = "",
-    this.appBarActions = const [],
+    this.appBarActions,
+    required this.child,
   }) : super(key: key);
 
   final Widget child;
   final String appBarTitle;
-  final List<Widget> appBarActions;
+  final List<Widget>? appBarActions;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class MainPage extends GetView {
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          '| ' + appBarTitle,
+          appBarTitle,
           style: TextStyle(
             fontSize: 22,
             color: Theme.of(context).primaryColor,

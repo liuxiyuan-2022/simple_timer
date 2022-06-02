@@ -162,13 +162,13 @@ class StopWatchController extends GetxController {
   }
 
   /// 将毫秒转化为 分/秒/毫秒
-  String formatTime(int time) {
-    var millisecond = (time % 1000).truncate();
+  String formatTime(int ms) {
+    var millisecond = (ms % 1000).truncate();
     var second = 0;
     var totalMinute = 0;
     var minute = 0;
     var result = "";
-    var totalSecond = (time / 1000).truncate(); // 3671
+    var totalSecond = (ms / 1000).truncate(); // 3671
     if (totalSecond > 59) {
       // 总秒数大于59 需要计算总分钟 数
       second = (totalSecond % 60).truncate(); // 11

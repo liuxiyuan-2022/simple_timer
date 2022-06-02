@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
-import 'package:simple_timer/widgets/main_page.dart';
+import 'package:simple_timer/widgets/main_page_template.dart';
 import 'package:simple_timer/widgets/timer_flip_counter.dart';
 import 'package:simple_timer/widgets/timer_picker.dart';
 import 'package:simple_timer/widgets/timer_scale_ring.dart';
@@ -16,7 +16,7 @@ class TimerPage extends GetView<TimerController> {
   Widget build(BuildContext context) {
     Get.put(TimerController(), permanent: true); // 不销毁此控制器
 
-    return MainPage(
+    return MainPageTemplate(
       appBarTitle: "timer".tr,
       appBarActions: [
         IconButton(

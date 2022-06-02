@@ -15,10 +15,7 @@ class SetLanguageBottomSheet extends GetView<SettingsController> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.all(Radius.circular(25)),
       ),
       child: Column(
         children: [
@@ -77,6 +74,6 @@ class SetLanguageBottomSheet extends GetView<SettingsController> {
           ),
         ],
       ),
-    );
+    ).marginOnly(left: 30, right: 30, bottom: 25);
   }
 }

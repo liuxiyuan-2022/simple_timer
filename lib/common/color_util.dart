@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-//hex颜色转换
-//通过 ColorUtil.fromHex(), 来调用.
+///hex颜色转换
+/// [ColorUtil.hex()]
 class ColorUtil {
   static Color hex(String hexString) {
     final buffer = StringBuffer();

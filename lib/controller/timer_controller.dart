@@ -1,12 +1,9 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/common/get_notification.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 

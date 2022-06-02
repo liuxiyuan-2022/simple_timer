@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +24,10 @@ class SettingsController extends GetxController {
   var language = AppLanguage.zh_CN.obs;
 
   /// 是否是最新版本
-  var isLatestVersion = false.obs;
+  var isLatestVersion = true.obs;
+
+  // /// 检查版本更新放DDos记数
+  // var versionDDosCount = 0.obs;
 
   @override
   void onInit() async {
@@ -68,16 +73,26 @@ class SettingsController extends GetxController {
     );
   }
 
-  /// 检查版本更新
-  void checkUpdates() async {
-    if (true) {
+  /// 检查版本更新[点击]
+  void checkVersion() {
+    // ignore: dead_code
+    if (false) {
       GetNotification.showToastSnakbar(
         'already_the_latest_version',
         minWidth: 135,
         maxWidth: 200,
       );
-    } else {}
+    } else {
+      // Get.bottomSheet(bottomsheet)
+      GetNotification.showBottomSheet(
+        title: 'version_update'.tr,
+        message: 'Do you need to update to version 8.8.61',
+      );
+    }
   }
+
+  /// app初始化时调用
+  void initCheckUpdates() {}
 }
 
 /// 语言列表 默认值[AppLanguage.zh_CN]
