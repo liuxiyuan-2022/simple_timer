@@ -1,13 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/settings_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
+import 'package:simple_timer/widgets/bottom_sheet_box.dart';
 
-/// 自定义Get的通知组件[GetSnackBar()]
+/// 自定义Get的通知组件
 class GetNotification {
   /// 显示Toast
   ///
@@ -49,7 +50,7 @@ class GetNotification {
     );
   }
 
-  /// GetbottomSheet
+  /// 显示GetbottomSheet
   static Future<T?> showBottomSheet<T>({
     required String title,
     String? message,
@@ -58,83 +59,215 @@ class GetNotification {
     Function()? confirmOnTap,
     Function()? cancelOnTap,
   }) {
-    // var controller = Get.put(SettingsController());
     return Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(25),
-        decoration: BoxDecoration(
-          color: Theme.of(Get.context!).cardColor,
-          borderRadius: const BorderRadius.all(Radius.circular(25)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // 标题
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(Get.context!).primaryColor,
-              ),
-            ).marginOnly(top: 15, bottom: 20),
-            Text(
-              message ?? '',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[400],
-              ),
-            ).marginOnly(bottom: 25),
-
-            TextButton(
-              onPressed: confirmOnTap,
-              child: Container(
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(
-                    color: Theme.of(Get.context!).toggleableActiveColor,
-                    width: 3,
-                  ),
-                ),
-                child: Text(
-                  confirmTitle ?? 'confirm'.tr,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(Get.context!).toggleableActiveColor,
-                    fontSize: 16,
-                    height: 1.1,
-                  ),
-                ).marginOnly(top: 15, bottom: 15),
-              ),
-              style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all(Colors.transparent),
-              ),
-            ).marginOnly(bottom: 5),
-            TextButton(
-              onPressed: cancelOnTap ?? () => Get.back(),
-              child: SizedBox(
-                width: 200,
-                child: Text(
-                  cancelTitle ?? 'cancel'.tr,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(Get.context!).primaryColor,
-                    fontSize: 16,
-                    height: 1.1,
-                  ),
-                ),
-              ).paddingOnly(top: 15, bottom: 15),
+      BottomSheetBox(
+        children: [
+          // 标题
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(Get.context!).primaryColor,
             ),
-          ],
-        ),
-      ).marginOnly(left: 30, right: 30, bottom: 25),
+          ).marginOnly(bottom: 20),
+          Text(
+            message ?? '',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[400],
+            ),
+          ).marginOnly(bottom: 25),
+
+          TextButton(
+            onPressed: confirmOnTap,
+            child: Container(
+              width: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: Theme.of(Get.context!).toggleableActiveColor,
+                  width: 3,
+                ),
+              ),
+              child: Text(
+                confirmTitle ?? 'confirm'.tr,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(Get.context!).toggleableActiveColor,
+                  fontSize: 16,
+                  height: 1.1,
+                ),
+              ).marginOnly(top: 15, bottom: 15),
+            ),
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(Colors.transparent),
+            ),
+          ).marginOnly(bottom: 5),
+          TextButton(
+            onPressed: cancelOnTap ?? () => Get.back(),
+            child: SizedBox(
+              width: 200,
+              child: Text(
+                cancelTitle ?? 'cancel'.tr,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(Get.context!).primaryColor,
+                  fontSize: 16,
+                  height: 1.1,
+                ),
+              ),
+            ).paddingOnly(top: 15),
+          ),
+        ],
+      ),
     );
   }
 
-  ///  计时结束通知
+  ///  显示语言列表选择框
+  static Future<T?> showLanguageBottomSheet<T>() {
+    var controller = Get.put(SettingsController());
+    return Get.bottomSheet(
+      BottomSheetBox(
+        children: [
+          Text(
+            'set_Language'.tr,
+            style: TextStyle(
+              color: Theme.of(Get.context!).primaryColor,
+              fontSize: 16,
+            ),
+          ).marginOnly(bottom: 20),
+          // 可选语言列表
+          SizedBox(
+            height: 125,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: AppLanguage.values.length,
+              itemExtent: 50,
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    controller.changeLanguage(AppLanguage.values[index]);
+                    Get.back();
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            controller.languageTitleList[index],
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Opacity(
+                            opacity: controller.language.value ==
+                                    AppLanguage.values[index]
+                                ? 1
+                                : 0,
+                            child: FaIcon(
+                              FontAwesomeIcons.check,
+                              color: Theme.of(context).toggleableActiveColor,
+                              size: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///  显示铃声列表选择框
+  static Future<T?> showRingtonesBottomSheet<T>() {
+    // var controller = Get.put(SettingsController());
+    return Get.bottomSheet(
+      BottomSheetBox(
+        children: [
+          // 标题
+          Text(
+            'ringtone'.tr,
+            style: TextStyle(
+              color: Theme.of(Get.context!).primaryColor,
+              fontSize: 16,
+            ),
+          ).marginOnly(bottom: 20),
+
+          // 选择列表
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: DefaultRingtones.values.length,
+              itemExtent: 50,
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    FlutterRingtonePlayer.stop();
+                    SettingsController.to
+                        .changeRingtone(DefaultRingtones.values[index]);
+                    // 预览铃声
+                    FlutterRingtonePlayer.play(
+                      fromAsset: SettingsController.to.defaultRingAsset.value,
+                    );
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            // SettingsController.to.languageTitleList[index],
+                            SettingsController.to.ringFromAssetList[index]
+                                .split('_')[1]
+                                .split('.')[0]
+                                .tr,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Obx(
+                            () => FaIcon(
+                              SettingsController.to.defaultRing.value ==
+                                      DefaultRingtones.values[index]
+                                  ? FontAwesomeIcons.solidCircle
+                                  : FontAwesomeIcons.circle,
+                              color: SettingsController.to.defaultRing.value ==
+                                      DefaultRingtones.values[index]
+                                  ? Theme.of(context).toggleableActiveColor
+                                  : Colors.grey[400],
+                              size: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///  显示计时结束通知条
   static SnackbarController showTimerToast() {
-    var controller = Get.put(TimerController());
     var _seconds = 0.obs;
     Timer _timer = Timer.periodic(
       const Duration(seconds: 1),
@@ -146,7 +279,7 @@ class GetNotification {
       GetSnackBar(
         titleText: Obx(
           () => Text(
-            controller.timerTitle.value + 'has_stopped'.tr,
+            TimerController.to.timerTitle.value + 'has_stopped'.tr,
             style: TextStyle(
               color: Theme.of(Get.context!).primaryColor,
               fontSize: 16,
@@ -204,7 +337,7 @@ class GetNotification {
                 // 播放提示音
                 FlutterRingtonePlayer.play(
                   looping: true,
-                  fromAsset: "assets/audio/notification_001.mp3",
+                  fromAsset: SettingsController.to.defaultRingAsset.value,
                 );
                 _timer;
                 break;
@@ -218,13 +351,12 @@ class GetNotification {
                 // 如果开启手势控制, 须在此时调用关闭通知铃声
                 FlutterRingtonePlayer.stop();
                 _timer.cancel();
-
                 break;
               }
             case SnackbarStatus.CLOSING:
               {
-                // FlutterRingtonePlayer.stop();
-                // _timer.cancel();
+                FlutterRingtonePlayer.stop();
+                _timer.cancel();
                 break;
               }
             default:

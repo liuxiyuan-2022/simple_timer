@@ -23,6 +23,11 @@
 
 ---
 
+2022.6.3
+
+- <font color=#70c000>新增</font>  默认铃声选择功能
+- <font color=##a1c6c9>优化</font>  BottomSheet代码
+
 2022.6.2
 
 - <font color=#70c000>新增</font>  单圈计时列表动画

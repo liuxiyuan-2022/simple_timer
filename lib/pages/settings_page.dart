@@ -1,10 +1,10 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_timer/common/get_notification.dart';
 import 'package:simple_timer/controller/settings_controller.dart';
 import 'package:simple_timer/pages/about_page.dart';
 import 'package:simple_timer/widgets/main_page_template.dart';
-import 'package:simple_timer/widgets/set_language_bottom_sheet.dart';
 import 'package:simple_timer/widgets/set_option.dart';
 
 class SettingsPage extends GetView<SettingsController> {
@@ -16,7 +16,7 @@ class SettingsPage extends GetView<SettingsController> {
 
     return Obx(
       () => MainPageTemplate(
-        appBarTitle: 'setting'.tr,
+        appBarTitle: 'setting_page'.tr,
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
@@ -34,7 +34,20 @@ class SettingsPage extends GetView<SettingsController> {
                   SetOption(
                     leading: FontAwesomeIcons.solidBell,
                     title: 'ringtone'.tr,
-                    onTap: () {},
+                    onTap: () => GetNotification.showRingtonesBottomSheet(),
+                    actions: [
+                      Text(
+                        controller.ringFromAssetList[DefaultRingtones.values
+                                .indexOf(controller.defaultRing.value)]
+                            .split('_')[1]
+                            .split('.')[0]
+                            .tr,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -78,9 +91,7 @@ class SettingsPage extends GetView<SettingsController> {
                   SetOption(
                     leading: FontAwesomeIcons.language,
                     title: 'language'.tr,
-                    onTap: () => Get.bottomSheet(
-                      const SetLanguageBottomSheet(),
-                    ),
+                    onTap: () => GetNotification.showLanguageBottomSheet(),
                     iconStyle: SetOptionIconStyle.faIcon,
                     actions: [
                       Text(
@@ -115,13 +126,10 @@ class SettingsPage extends GetView<SettingsController> {
                     actions: [
                       Visibility(
                         visible: !controller.isLatestVersion.value,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
+                        child: FaIcon(
+                          FontAwesomeIcons.solidCircle,
+                          color: Theme.of(context).toggleableActiveColor,
+                          size: 8,
                         ),
                       ).marginOnly(right: 2.5),
                     ],

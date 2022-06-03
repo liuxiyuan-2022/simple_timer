@@ -14,7 +14,7 @@ class StopWatchPage extends GetView<StopWatchController> {
     Get.put(StopWatchController(), permanent: true); // 不消毁此控制器
 
     return MainPageTemplate(
-      appBarTitle: 'stop_watch'.tr,
+      appBarTitle: 'stop_watch_page'.tr,
       child: Stack(
         children: [
           Positioned(

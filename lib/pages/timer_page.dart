@@ -17,7 +17,7 @@ class TimerPage extends GetView<TimerController> {
     Get.put(TimerController(), permanent: true); // 不销毁此控制器
 
     return MainPageTemplate(
-      appBarTitle: "timer".tr,
+      appBarTitle: "timer_page".tr,
       appBarActions: [
         IconButton(
           onPressed: () {},

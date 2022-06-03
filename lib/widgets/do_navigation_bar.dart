@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// dot_navigation_bar: ^1.0.1+4插件[修改] -去除水波纹
+/// 浮动底部导航栏
+///
+/// dot_navigation_bar: ^1.0.1+4 插件[修改] -去除水波纹
 class DotNavigationBar extends StatelessWidget {
   const DotNavigationBar(
       {Key? key,

@@ -8,9 +8,9 @@ class Messages extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
         'zh_CN': {
-          'timer': '| 计时器',
-          'setting': '| 设置',
-          'stop_watch': '| 秒表',
+          'timer_page': '计时器',
+          'setting_page': '设置',
+          'stop_watch_page': '秒表',
           'ringtone': '铃声',
           'dark_mode': '夜间模式',
           'lab': 'Simple实验室',
@@ -27,11 +27,16 @@ class Messages extends Translations {
           'version_update': '版本更新',
           'confirm': '确定',
           'cancel': '取消',
+          'drip': '滴答',
+          'chords': '音阶',
+          'jingle': '叮当',
+          'light-steps': '轻盈的步伐',
+          'music-box': '音乐盒',
         },
         'en_US': {
-          'timer': '| Timer',
-          'setting': '| Settings',
-          'stop_watch': '| StopWatch',
+          'timer_page': 'Timer',
+          'setting_page': 'Settings',
+          'stop_watch_page': 'StopWatch',
           'ringtone': 'Ringtone',
           'dark_mode': 'DarkMode',
           'lab': 'Simple Lab',
@@ -48,6 +53,11 @@ class Messages extends Translations {
           'version_update': 'Version Update',
           'confirm': 'Confirm',
           'cancel': 'Cancel',
+          'drip': 'Drip',
+          'chords': 'Chords',
+          'jingle': 'Jingle',
+          'light-steps': 'Light Steps',
+          'music-box': 'Music Box',
         }
       };
 }

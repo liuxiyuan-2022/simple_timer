@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,8 +22,22 @@ class SettingsController extends GetxController {
   var language = AppLanguage.zh_CN.obs;
 
   /// 是否是最新版本
-  var isLatestVersion = true.obs;
+  var isLatestVersion = false.obs;
 
+  /// 铃声播放路径列表
+  var ringFromAssetList = [
+    "assets/audio/ringtone_drip.mp3", // 滴答
+    "assets/audio/ringtone_chords.mp3", // 音阶
+    "assets/audio/ringtone_jingle.mp3", // 叮当
+    "assets/audio/ringtone_light-steps.mp3", // 轻盈的步伐
+    "assets/audio/ringtone_music-box.mp3", // 音乐盒
+  ].obs;
+
+  /// 当前默认铃声
+  var defaultRing = DefaultRingtones.drip.obs;
+
+  /// 当前默认铃声路径
+  var defaultRingAsset = 'assets/audio/ringtone_drip.mp3'.obs;
   // /// 检查版本更新放DDos记数
   // var versionDDosCount = 0.obs;
 
@@ -35,6 +47,7 @@ class SettingsController extends GetxController {
     prefs = await SharedPreferences.getInstance();
     initDarkMode();
     initAppLanguage();
+    initRingtone();
     // checkUpdates();
   }
 
@@ -93,8 +106,28 @@ class SettingsController extends GetxController {
 
   /// app初始化时调用
   void initCheckUpdates() {}
+
+  /// 切换铃声
+  void changeRingtone(DefaultRingtones ringtone) async {
+    defaultRing.value = ringtone;
+    defaultRingAsset.value =
+        ringFromAssetList[DefaultRingtones.values.indexOf(ringtone)];
+    await prefs.setString('defaultRing', defaultRingAsset.value);
+  }
+
+  /// 初始化默认铃声
+  void initRingtone() {
+    defaultRingAsset.value =
+        prefs.getString('defaultRing') ?? "assets/audio/ringtone_drip.mp3";
+    int _ringIndex = ringFromAssetList.indexOf(defaultRingAsset.value);
+    defaultRing.value = DefaultRingtones.values[_ringIndex];
+  }
 }
 
 /// 语言列表 默认值[AppLanguage.zh_CN]
 // ignore: constant_identifier_names
 enum AppLanguage { zh_CN, en_US }
+
+/// 铃声列表 默认值[DefaultRingtones.drip]
+// ignore: constant_identifier_names
+enum DefaultRingtones { drip, chords, jingle, light_steps, music_box }

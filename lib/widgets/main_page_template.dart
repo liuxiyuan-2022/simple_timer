@@ -19,7 +19,7 @@ class MainPageTemplate extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          appBarTitle,
+          '| ' + appBarTitle,
           style: TextStyle(
             fontSize: 22,
             color: Theme.of(context).primaryColor,
