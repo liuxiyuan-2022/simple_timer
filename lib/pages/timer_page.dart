@@ -5,6 +5,7 @@ import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
 import 'package:simple_timer/widgets/main_page_template.dart';
 import 'package:simple_timer/widgets/timer_flip_counter.dart';
+import 'package:simple_timer/widgets/timer_list.dart';
 import 'package:simple_timer/widgets/timer_picker.dart';
 import 'package:simple_timer/widgets/timer_scale_ring.dart';
 import 'package:simple_timer/widgets/timer_status_button.dart';
@@ -34,9 +35,7 @@ class TimerPage extends GetView<TimerController> {
               Visibility(
                 visible: controller.isTiming.value ? true : false,
                 child: Positioned(
-                  child: TimerScaleRing(
-                    scale: context.width * 1.3,
-                  ),
+                  child: TimerScaleRing(scale: context.width * 1.3),
                   top: -context.height / 3.5,
                   left: context.width / 2,
                 ),
@@ -51,7 +50,18 @@ class TimerPage extends GetView<TimerController> {
               ),
               Visibility(
                 visible: controller.isTiming.value ? false : true,
-                child: const TimerPicker(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TimerPicker(
+                      hourValue: controller.timerHour,
+                      minuteValue: controller.timerMinute,
+                      secondValue: controller.timerSecond,
+                    ).marginOnly(bottom: 30),
+                    const TimerList(),
+                  ],
+                ),
               ).marginOnly(top: 50),
               const Positioned(
                 child: TimerStatusButton(size: 70),

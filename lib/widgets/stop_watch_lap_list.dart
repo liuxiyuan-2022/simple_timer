@@ -49,7 +49,8 @@ class StopWatchLapList extends GetView<StopWatchController> {
                           ),
                         ),
                         const Expanded(
-                            child: SizedBox(width: double.maxFinite)),
+                          child: SizedBox(width: double.maxFinite),
+                        ),
 
                         // 单圈时间间隔
                         // +00:00.00

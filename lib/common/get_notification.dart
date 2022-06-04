@@ -7,6 +7,7 @@ import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/settings_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
 import 'package:simple_timer/widgets/bottom_sheet_box.dart';
+import 'package:simple_timer/widgets/timer_picker.dart';
 
 /// 自定义Get的通知组件
 class GetNotification {
@@ -51,13 +52,18 @@ class GetNotification {
   }
 
   /// 显示GetbottomSheet
-  static Future<T?> showBottomSheet<T>({
+  static Future<T?> showCustomBottomSheet<T>({
     required String title,
     String? message,
     String? confirmTitle,
+    Color? confirmBorderColor,
+    Color? confirmTextColor,
     String? cancelTitle,
+    // Color? cancelBorderColor,
+    Color? cancelTextColor,
     Function()? confirmOnTap,
     Function()? cancelOnTap,
+    List<Widget> children = const <Widget>[],
   }) {
     return Get.bottomSheet(
       BottomSheetBox(
@@ -69,23 +75,36 @@ class GetNotification {
               fontSize: 16,
               color: Theme.of(Get.context!).primaryColor,
             ),
-          ).marginOnly(bottom: 20),
-          Text(
-            message ?? '',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[400],
+          ).marginOnly(bottom: 15),
+          Visibility(
+            visible: message == null ? false : true,
+            child: Text(
+              message ?? '',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+              ),
             ),
-          ).marginOnly(bottom: 25),
-
+          ),
+          Visibility(
+            visible: children.isEmpty ? false : true,
+            child: Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: children,
+              ),
+            ),
+          ),
           TextButton(
             onPressed: confirmOnTap,
             child: Container(
-              width: 200,
+              width: 185,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
-                  color: Theme.of(Get.context!).toggleableActiveColor,
+                  color: confirmBorderColor ??
+                      Theme.of(Get.context!).toggleableActiveColor,
                   width: 3,
                 ),
               ),
@@ -93,16 +112,17 @@ class GetNotification {
                 confirmTitle ?? 'confirm'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Theme.of(Get.context!).toggleableActiveColor,
+                  color: confirmTextColor ??
+                      Theme.of(Get.context!).toggleableActiveColor,
                   fontSize: 16,
                   height: 1.1,
                 ),
-              ).marginOnly(top: 15, bottom: 15),
+              ).marginOnly(top: 10, bottom: 10),
             ),
             style: ButtonStyle(
               overlayColor: MaterialStateProperty.all(Colors.transparent),
             ),
-          ).marginOnly(bottom: 5),
+          ).marginOnly(bottom: 5, top: 20),
           TextButton(
             onPressed: cancelOnTap ?? () => Get.back(),
             child: SizedBox(
@@ -111,15 +131,19 @@ class GetNotification {
                 cancelTitle ?? 'cancel'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Theme.of(Get.context!).primaryColor,
+                  color: cancelTextColor ?? Theme.of(Get.context!).primaryColor,
                   fontSize: 16,
                   height: 1.1,
                 ),
               ),
             ).paddingOnly(top: 15),
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(Colors.transparent),
+            ),
           ),
         ],
       ),
+      barrierColor: Colors.black38,
     );
   }
 
@@ -185,6 +209,7 @@ class GetNotification {
           ),
         ],
       ),
+      barrierColor: Colors.black38,
     );
   }
 
@@ -263,6 +288,114 @@ class GetNotification {
           ),
         ],
       ),
+      barrierColor: Colors.black38,
+    );
+  }
+
+  ///  显计时器时间编辑框
+  static Future<T?> showTimeEditBottomSheet<T>(int index) {
+    TimerController.to.initTimerPicker(index);
+    return showCustomBottomSheet(
+      title: 'change_time'.tr,
+      confirmOnTap: () {
+        TimerController.to.changeTimerListTime(index);
+        while (Get.isBottomSheetOpen!) {
+          Get.back();
+        }
+      },
+      cancelOnTap: () {
+        while (Get.isBottomSheetOpen!) {
+          Get.back();
+        }
+      },
+      confirmBorderColor: Theme.of(Get.context!).primaryColor,
+      confirmTextColor: Theme.of(Get.context!).primaryColor,
+      children: [
+        TimerPicker(
+          hourValue: TimerController.to.timerListHour,
+          minuteValue: TimerController.to.timerListMinute,
+          secondValue: TimerController.to.timerListSecond,
+          scale: .8,
+        ),
+      ],
+    );
+  }
+
+  /// 显示计时器编辑菜单
+  static Future<T?> showEditBar<T>(int index) {
+    return Get.bottomSheet(
+      BottomSheetBox(
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+        children: [
+          // 重命名
+          InkWell(
+            onTap: () {},
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.solidPenToSquare,
+                  size: 25,
+                  color: ColorUtil.hex("#f18435"),
+                ),
+                Text(
+                  'rename'.tr,
+                  style: const TextStyle(color: Colors.grey, fontSize: 10),
+                ).marginOnly(top: 10),
+              ],
+            ),
+          ),
+
+          // 调整时间
+          InkWell(
+            onTap: () => showTimeEditBottomSheet(index),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.solidClock,
+                  size: 25,
+                  color: ColorUtil.hex("#01cdcc"),
+                ),
+                Text(
+                  'change_time'.tr,
+                  style: const TextStyle(color: Colors.grey, fontSize: 10),
+                ).marginOnly(top: 10),
+              ],
+            ),
+          ),
+
+          // 删除
+          InkWell(
+            onTap: () {},
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.solidTrashCan,
+                  size: 25,
+                  color: ColorUtil.hex("#ec602d"),
+                ),
+                Text(
+                  'remove'.tr,
+                  style: const TextStyle(color: Colors.grey, fontSize: 10),
+                ).marginOnly(top: 10),
+              ],
+            ),
+          ),
+        ],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(.1),
+            offset: const Offset(0, 2),
+            spreadRadius: 2,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      barrierColor: Colors.transparent,
     );
   }
 
@@ -279,7 +412,7 @@ class GetNotification {
       GetSnackBar(
         titleText: Obx(
           () => Text(
-            TimerController.to.timerTitle.value + 'has_stopped'.tr,
+            TimerController.to.timerTag.value.tr + 'has_stopped'.tr,
             style: TextStyle(
               color: Theme.of(Get.context!).primaryColor,
               fontSize: 16,

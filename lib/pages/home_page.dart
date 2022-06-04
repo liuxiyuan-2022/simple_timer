@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
+import 'package:simple_timer/common/get_notification.dart';
 import 'package:simple_timer/controller/home_controller.dart';
+import 'package:simple_timer/controller/timer_controller.dart';
 import 'package:simple_timer/pages/stop_watch_page.dart';
 import 'package:simple_timer/pages/settings_page.dart';
 import 'package:simple_timer/pages/timer_page.dart';
@@ -70,6 +72,13 @@ class HomePage extends GetView<HomeController> {
               ],
             ),
           ).paddingOnly(bottom: 10),
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     // GetNotification.showTimeEditBottomSheet(1);
+          //     GetNotification.showEditBar(0);
+          //     // printInfo(info: '${TimerController.to.timerHour.value}');
+          //   },
+          // ),
         );
       },
     );

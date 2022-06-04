@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ class TimerController extends GetxController
   var isPauseTiming = false.obs;
 
   /// 当前计时器标题
-  var timerTitle = '计时器'.obs;
+  var timerTag = 'timer'.obs;
 
   /// 计时器 - 秒
   var timerSecond = 0.obs;
@@ -41,6 +42,21 @@ class TimerController extends GetxController
 
   /// 计时器总时长 /秒
   var totalTime = 0.obs;
+
+  /// 计时器列表
+  var timerList = <RxList<String>>[
+    ['00:15:00', '洗衣服'].obs,
+    ['00:03:00', '泡面'].obs,
+    ['00:03:00', '泡面'].obs,
+  ].obs;
+
+  /// 计时器时间列表时间预设
+  var timerListHour = 0.obs;
+  var timerListMinute = 0.obs;
+  var timerListSecond = 0.obs;
+
+  /// 计时器列表控制器
+  var timerListController = ScrollController();
 
   @override
   void onInit() async {
@@ -161,6 +177,41 @@ class TimerController extends GetxController
   int timerToSecond(int h, int m, int s) {
     return h * 60 * 60 + m * 60 + s;
   }
+
+  /// 重命名计时器标签
+  void renameTimerTag(int index) {}
+
+  /// 删除计时器
+  void removeTimer(int index) {}
+
+  /// 使用计时器列表预设
+  void applyTimerListInfo(int index) {
+    timerHour.value = int.parse(timerList[index][0].split(":")[0]);
+    timerMinute.value = int.parse(timerList[index][0].split(':')[1]);
+    timerSecond.value = int.parse(timerList[index][0].split(':')[2]);
+    timerTag.value = timerList[index][1];
+  }
+
+  /// 更改计时器列表时间预设
+  void changeTimerListTime(int index) {
+    String result = timerListHour.value.toString().padLeft(2, '0') + ':';
+    result += timerListMinute.value.toString().padLeft(2, '0') + ':';
+    result += timerListSecond.value.toString().padLeft(2, '0');
+    timerList[index][0] = result;
+
+    // 刷新列表
+    update(['timerList']);
+  }
+
+  /// 调用timerPicker更改计时器列表时间时, 初始化timerPicker的时间
+  void initTimerPicker(int index) {
+    timerListHour.value = int.parse(timerList[index][0].split(':')[0]);
+    timerListMinute.value = int.parse(timerList[index][0].split(':')[1]);
+    timerListSecond.value = int.parse(timerList[index][0].split(':')[2]);
+  }
+
+  /// 初始化计时器列表
+  void initTimerList() {}
 
   @override
   void onClose() async {

@@ -14,6 +14,7 @@ class HomeController extends GetxController {
     Get.put(SettingsController());
   }
 
+  /// 手势滑动切换页面
   void pageViewSlideChanged(double offset) {
     int index = SelectedTab.values.indexOf(selectedTab);
     if (offset > 0) {
@@ -29,6 +30,7 @@ class HomeController extends GetxController {
     }
   }
 
+  /// 切换页面
   void pageViewChanged(int i) {
     pageController.animateToPage(
       i,

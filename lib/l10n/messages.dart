@@ -32,6 +32,10 @@ class Messages extends Translations {
           'jingle': '叮当',
           'light-steps': '轻盈的步伐',
           'music-box': '音乐盒',
+          'change_time': '调整时间',
+          'rename': '重命名',
+          'remove': '删除',
+          'timer': '计时器',
         },
         'en_US': {
           'timer_page': 'Timer',
@@ -58,6 +62,10 @@ class Messages extends Translations {
           'jingle': 'Jingle',
           'light-steps': 'Light Steps',
           'music-box': 'Music Box',
+          'change_time': 'Change time',
+          'rename': 'Raname',
+          'remove': 'Remove',
+          'timer': 'Timer',
         }
       };
 }

@@ -28,7 +28,7 @@ class TimerFlipCounter extends GetView<TimerController> {
         children: [
           // 计时器标题
           Text(
-            controller.timerTitle.value,
+            controller.timerTag.value.tr,
             style: TextStyle(
               color: titleColor,
               fontWeight: FontWeight.w700,

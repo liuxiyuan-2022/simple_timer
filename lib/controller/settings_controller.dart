@@ -97,7 +97,7 @@ class SettingsController extends GetxController {
       );
     } else {
       // Get.bottomSheet(bottomsheet)
-      GetNotification.showBottomSheet(
+      GetNotification.showCustomBottomSheet(
         title: 'version_update'.tr,
         message: 'Do you need to update to version 8.8.61',
       );
