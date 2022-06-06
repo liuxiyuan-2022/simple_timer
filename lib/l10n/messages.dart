@@ -36,6 +36,11 @@ class Messages extends Translations {
           'rename': '重命名',
           'remove': '删除',
           'timer': '计时器',
+          'remove_timer': '确定删除此计时器吗?',
+          'add_timer': '添加计时器',
+          'add': '添加',
+          'input_content': '输入内容',
+          'change_tag': '修改标签',
         },
         'en_US': {
           'timer_page': 'Timer',
@@ -66,6 +71,11 @@ class Messages extends Translations {
           'rename': 'Raname',
           'remove': 'Remove',
           'timer': 'Timer',
+          'remove_timer': 'Confirm to remove this timer?',
+          'add_timer': 'Add Timer',
+          'add': 'Add',
+          'input_content': 'Input content',
+          'change_tag': 'Change tag',
         }
       };
 }

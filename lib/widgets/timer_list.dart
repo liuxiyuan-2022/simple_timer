@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/get_notification.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
@@ -26,40 +27,62 @@ class TimerList extends GetView<TimerController> {
             itemCount: controller.timerList.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) {
-              return InkWell(
-                onTap: () {
-                  controller.applyTimerListInfo(index);
-                },
-                onLongPress: () => GetNotification.showEditBar(index),
-                child: Container(
-                  padding: const EdgeInsets.only(left: 5, right: 5),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(.1),
-                    borderRadius: const BorderRadius.all(Radius.circular(15)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        controller.timerList[index][1],
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 12,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        textAlign: TextAlign.center,
-                      ).marginOnly(bottom: 3),
-                      Text(
-                        controller.timerList[index][0],
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 12,
-                        ),
+              if (controller.timerList[index][0] == 'add') {
+                return InkWell(
+                  onTap: () {
+                    // 添加计时器预设
+                    GetNotification.showAddTimerBottomSheet();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(.1),
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    ),
+                    child: const Center(
+                      child: FaIcon(
+                        FontAwesomeIcons.plus,
+                        color: Colors.grey,
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                return InkWell(
+                  onTap: () {
+                    controller.applyTimerListInfo(index);
+                  },
+                  onLongPress: () => GetNotification.showEditBar(index),
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(.1),
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          controller.timerList[index][1],
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 12,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          textAlign: TextAlign.center,
+                        ).marginOnly(bottom: 3),
+                        Text(
+                          controller.timerList[index][0],
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ).marginOnly(left: 25, right: 25);

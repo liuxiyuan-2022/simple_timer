@@ -60,7 +60,7 @@ class TimerPicker extends GetView<TimerController> {
                 maxValue: 10,
                 zeroPad: true,
                 itemWidth: 70 * scale,
-
+                itemHeight: 50 * scale,
                 // 避免计时时继续刷新此组件
                 value: hourValue.value,
                 selectedTextStyle: _theme.textTheme.headline1,
@@ -79,6 +79,7 @@ class TimerPicker extends GetView<TimerController> {
                 maxValue: 59,
                 zeroPad: true,
                 itemWidth: 70 * scale,
+                itemHeight: 50 * scale,
                 value: minuteValue.value,
                 selectedTextStyle: _theme.textTheme.headline1,
                 textStyle: _theme.textTheme.headline2,
@@ -96,6 +97,7 @@ class TimerPicker extends GetView<TimerController> {
                 maxValue: 59,
                 zeroPad: true,
                 itemWidth: 70 * scale,
+                itemHeight: 50 * scale,
                 value: secondValue.value,
                 selectedTextStyle: _theme.textTheme.headline1,
                 textStyle: _theme.textTheme.headline2,

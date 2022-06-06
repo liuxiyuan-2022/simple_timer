@@ -7,6 +7,7 @@ import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/settings_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
 import 'package:simple_timer/widgets/bottom_sheet_box.dart';
+import 'package:simple_timer/widgets/main_text_field.dart';
 import 'package:simple_timer/widgets/timer_picker.dart';
 
 /// 自定义Get的通知组件
@@ -51,7 +52,7 @@ class GetNotification {
     );
   }
 
-  /// 显示GetbottomSheet
+  /// 显示自定义GetbottomSheet
   static Future<T?> showCustomBottomSheet<T>({
     required String title,
     String? message,
@@ -64,86 +65,114 @@ class GetNotification {
     Function()? confirmOnTap,
     Function()? cancelOnTap,
     List<Widget> children = const <Widget>[],
+
+    /// 当键盘调出时隐藏<确认>和<取消>按钮
+    bool heightAdaptation = true,
   }) {
     return Get.bottomSheet(
-      BottomSheetBox(
-        children: [
-          // 标题
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              color: Theme.of(Get.context!).primaryColor,
-            ),
-          ).marginOnly(bottom: 15),
-          Visibility(
-            visible: message == null ? false : true,
-            child: Text(
-              message ?? '',
+      Obx(
+        () => BottomSheetBox(
+          children: [
+            // 标题
+            Text(
+              title,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey[400],
+                color: Theme.of(Get.context!).primaryColor,
+              ),
+            ).marginOnly(bottom: 15),
+            // 内容
+            Visibility(
+              visible: message == null ? false : true,
+              child: Text(
+                message ?? '',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[400],
+                ),
               ),
             ),
-          ),
-          Visibility(
-            visible: children.isEmpty ? false : true,
-            child: Expanded(
+            // 组件
+            Visibility(
+              visible: children.isEmpty ? false : true,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: children,
               ),
             ),
-          ),
-          TextButton(
-            onPressed: confirmOnTap,
-            child: Container(
-              width: 185,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                  color: confirmBorderColor ??
-                      Theme.of(Get.context!).toggleableActiveColor,
-                  width: 3,
+            // 如果打开键盘就隐藏按钮
+            // 确定按钮
+            Visibility(
+              visible: heightAdaptation
+                  ? (TimerController.to.isShowKeyboard.value ? false : true)
+                  : true.obs.value,
+              maintainAnimation: true,
+              maintainSize: true,
+              maintainState: true,
+              child: TextButton(
+                onPressed: confirmOnTap,
+                child: Container(
+                  width: 175,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: confirmBorderColor ??
+                          Theme.of(Get.context!).toggleableActiveColor,
+                      width: 3,
+                    ),
+                  ),
+                  child: Text(
+                    confirmTitle ?? 'confirm'.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: confirmTextColor ??
+                          Theme.of(Get.context!).toggleableActiveColor,
+                      fontSize: 16,
+                      height: 1.1,
+                    ),
+                  ).marginOnly(top: 12.5, bottom: 12.5),
+                ),
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                ),
+              ).marginOnly(bottom: 5, top: 20),
+            ),
+            // 取消按钮
+            Visibility(
+              visible: heightAdaptation
+                  ? (TimerController.to.isShowKeyboard.value ? false : true)
+                  : true.obs.value,
+              child: TextButton(
+                onPressed: cancelOnTap ??
+                    () {
+                      // 关闭弹窗
+                      while (Get.isBottomSheetOpen!) {
+                        Get.back();
+                      }
+                    },
+                child: SizedBox(
+                  width: 200,
+                  child: Text(
+                    cancelTitle ?? 'cancel'.tr,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: cancelTextColor ??
+                          Theme.of(Get.context!).primaryColor,
+                      fontSize: 16,
+                      height: 1.1,
+                    ),
+                  ),
+                ),
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
                 ),
               ),
-              child: Text(
-                confirmTitle ?? 'confirm'.tr,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: confirmTextColor ??
-                      Theme.of(Get.context!).toggleableActiveColor,
-                  fontSize: 16,
-                  height: 1.1,
-                ),
-              ).marginOnly(top: 10, bottom: 10),
             ),
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-          ).marginOnly(bottom: 5, top: 20),
-          TextButton(
-            onPressed: cancelOnTap ?? () => Get.back(),
-            child: SizedBox(
-              width: 200,
-              child: Text(
-                cancelTitle ?? 'cancel'.tr,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: cancelTextColor ?? Theme.of(Get.context!).primaryColor,
-                  fontSize: 16,
-                  height: 1.1,
-                ),
-              ),
-            ).paddingOnly(top: 15),
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-      barrierColor: Colors.black38,
+      barrierColor: Colors.black12,
     );
   }
 
@@ -209,7 +238,7 @@ class GetNotification {
           ),
         ],
       ),
-      barrierColor: Colors.black38,
+      barrierColor: Colors.black12,
     );
   }
 
@@ -288,40 +317,11 @@ class GetNotification {
           ),
         ],
       ),
-      barrierColor: Colors.black38,
+      barrierColor: Colors.black12,
     );
   }
 
-  ///  显计时器时间编辑框
-  static Future<T?> showTimeEditBottomSheet<T>(int index) {
-    TimerController.to.initTimerPicker(index);
-    return showCustomBottomSheet(
-      title: 'change_time'.tr,
-      confirmOnTap: () {
-        TimerController.to.changeTimerListTime(index);
-        while (Get.isBottomSheetOpen!) {
-          Get.back();
-        }
-      },
-      cancelOnTap: () {
-        while (Get.isBottomSheetOpen!) {
-          Get.back();
-        }
-      },
-      confirmBorderColor: Theme.of(Get.context!).primaryColor,
-      confirmTextColor: Theme.of(Get.context!).primaryColor,
-      children: [
-        TimerPicker(
-          hourValue: TimerController.to.timerListHour,
-          minuteValue: TimerController.to.timerListMinute,
-          secondValue: TimerController.to.timerListSecond,
-          scale: .8,
-        ),
-      ],
-    );
-  }
-
-  /// 显示计时器编辑菜单
+  /// 显示计时器预设编辑菜单条
   static Future<T?> showEditBar<T>(int index) {
     return Get.bottomSheet(
       BottomSheetBox(
@@ -331,7 +331,7 @@ class GetNotification {
         children: [
           // 重命名
           InkWell(
-            onTap: () {},
+            onTap: () => showRenameTagBottomSheet(index),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -350,7 +350,7 @@ class GetNotification {
 
           // 调整时间
           InkWell(
-            onTap: () => showTimeEditBottomSheet(index),
+            onTap: () => showEditTimeBottomSheet(index),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -369,7 +369,7 @@ class GetNotification {
 
           // 删除
           InkWell(
-            onTap: () {},
+            onTap: () => TimerController.to.removeTimer(index),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -395,7 +395,74 @@ class GetNotification {
           ),
         ],
       ),
-      barrierColor: Colors.transparent,
+      barrierColor: Colors.black12,
+    );
+  }
+
+  ///  显时计时器预设时间编辑框 <修改时间>
+  static Future<T?> showEditTimeBottomSheet<T>(int index) {
+    TimerController.to.initTimerPicker(index);
+    return showCustomBottomSheet(
+      title: 'change_time'.tr,
+      confirmOnTap: () {
+        TimerController.to.changeTimerListTime(index);
+        while (Get.isBottomSheetOpen!) {
+          Get.back();
+        }
+      },
+      confirmBorderColor: Theme.of(Get.context!).primaryColor,
+      confirmTextColor: Theme.of(Get.context!).primaryColor,
+      children: [
+        TimerPicker(
+          hourValue: TimerController.to.timerListHour,
+          minuteValue: TimerController.to.timerListMinute,
+          secondValue: TimerController.to.timerListSecond,
+          scale: .8,
+        ),
+      ],
+    );
+  }
+
+  ///  显时计时器预设标签编辑框 <修改标签>
+  static Future<T?> showRenameTagBottomSheet<T>(int index) {
+    TimerController.to.initTimerPicker(index);
+    return showCustomBottomSheet(
+      title: 'change_tag'.tr,
+      confirmOnTap: () {
+        TimerController.to.renameTimerTag(index);
+        while (Get.isBottomSheetOpen!) {
+          Get.back();
+        }
+      },
+      confirmBorderColor: Theme.of(Get.context!).primaryColor,
+      confirmTextColor: Theme.of(Get.context!).primaryColor,
+      heightAdaptation: false,
+      children: [
+        const MainTextField().marginOnly(top: 10),
+      ],
+    );
+  }
+
+  /// 显示添加计时器编辑框  <添加预设>
+  static Future<T?> showAddTimerBottomSheet<T>() {
+    return showCustomBottomSheet(
+      title: 'add_timer'.tr,
+      confirmTitle: 'add'.tr,
+      confirmOnTap: () {
+        TimerController.to.addTimer();
+        while (Get.isBottomSheetOpen!) {
+          Get.back();
+        }
+      },
+      children: [
+        TimerPicker(
+          hourValue: TimerController.to.timerListHour,
+          minuteValue: TimerController.to.timerListMinute,
+          secondValue: TimerController.to.timerListSecond,
+          scale: .8,
+        ),
+        const MainTextField().marginOnly(top: 10),
+      ],
     );
   }
 

@@ -19,12 +19,12 @@ class TimerPage extends GetView<TimerController> {
 
     return MainPageTemplate(
       appBarTitle: "timer_page".tr,
-      appBarActions: [
-        IconButton(
-          onPressed: () {},
-          icon: const FaIcon(FontAwesomeIcons.ellipsis),
-        ).marginOnly(right: 10)
-      ],
+      // appBarActions: [
+      //   // IconButton(
+      //   //   onPressed: () {},
+      //   //   icon: const FaIcon(FontAwesomeIcons.ellipsis),
+      //   // ).marginOnly(right: 10)
+      // ],
       child: SizedBox(
         width: context.width,
         height: context.height,
@@ -58,7 +58,7 @@ class TimerPage extends GetView<TimerController> {
                       hourValue: controller.timerHour,
                       minuteValue: controller.timerMinute,
                       secondValue: controller.timerSecond,
-                    ).marginOnly(bottom: 30),
+                    ).marginOnly(bottom: 60),
                     const TimerList(),
                   ],
                 ),

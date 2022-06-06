@@ -33,7 +33,10 @@ class TimerFlipCounter extends GetView<TimerController> {
               color: titleColor,
               fontWeight: FontWeight.w700,
               fontSize: size / 3,
-              letterSpacing: 5,
+              letterSpacing:
+                  SettingsController.to.language.value == AppLanguage.zh_CN
+                      ? 5
+                      : null,
               height: 1.1,
             ),
           ).marginOnly(bottom: 30),
@@ -45,7 +48,7 @@ class TimerFlipCounter extends GetView<TimerController> {
               AnimatedFlipCounter(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeOutBack,
-                value: controller.timerHour.value, // pass in a value like 2014
+                value: controller.timerHour.value,
                 wholeDigits: 2,
                 textStyle: TextStyle(
                   fontSize: size,
@@ -69,8 +72,7 @@ class TimerFlipCounter extends GetView<TimerController> {
               AnimatedFlipCounter(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeOutBack,
-                value:
-                    controller.timerMinute.value, // pass in a value like 2014
+                value: controller.timerMinute.value,
                 wholeDigits: 2,
                 textStyle: TextStyle(
                   fontSize: size,
@@ -94,8 +96,7 @@ class TimerFlipCounter extends GetView<TimerController> {
               AnimatedFlipCounter(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeOutBack,
-                value:
-                    controller.timerSecond.value, // pass in a value like 2014
+                value: controller.timerSecond.value,
                 wholeDigits: 2,
                 textStyle: TextStyle(
                   fontSize: size,
