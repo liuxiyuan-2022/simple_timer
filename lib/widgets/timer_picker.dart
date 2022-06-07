@@ -61,7 +61,6 @@ class TimerPicker extends GetView<TimerController> {
                 zeroPad: true,
                 itemWidth: 70 * scale,
                 itemHeight: 50 * scale,
-                // 避免计时时继续刷新此组件
                 value: hourValue.value,
                 selectedTextStyle: _theme.textTheme.headline1,
                 textStyle: _theme.textTheme.headline2,

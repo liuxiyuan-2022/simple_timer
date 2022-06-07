@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_timer/common/data_util.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class StopWatchController extends GetxController {
@@ -56,11 +57,11 @@ class StopWatchController extends GetxController {
     lapIntervalList.value = prefs.getStringList('lapIntervalList') ?? [];
     lapPresetTime.value = prefs.getInt('lapPresetTime') ?? 0;
     timerMinute.value =
-        int.parse(formatTime(lapPresetTime.value).substring(0, 2));
+        int.parse(DataUtil.msformat(lapPresetTime.value).substring(0, 2));
     timerSecond.value =
-        int.parse(formatTime(lapPresetTime.value).substring(3, 5));
+        int.parse(DataUtil.msformat(lapPresetTime.value).substring(3, 5));
     timerMillSecond.value =
-        int.parse(formatTime(lapPresetTime.value).substring(6, 8));
+        int.parse(DataUtil.msformat(lapPresetTime.value).substring(6, 8));
   }
 
   /// 开始计时
@@ -157,36 +158,8 @@ class StopWatchController extends GetxController {
       int _lapInterval = nowLapTime - lastLapTime;
 
       // 在列表首位插入
-      lapIntervalList.insert(0, formatTime(_lapInterval));
+      lapIntervalList.insert(0, DataUtil.msformat(_lapInterval));
     }
-  }
-
-  /// 将毫秒转化为 分/秒/毫秒
-  String formatTime(int ms) {
-    var millisecond = (ms % 1000).truncate();
-    var second = 0;
-    var totalMinute = 0;
-    var minute = 0;
-    var result = "";
-    var totalSecond = (ms / 1000).truncate(); // 3671
-    if (totalSecond > 59) {
-      // 总秒数大于59 需要计算总分钟 数
-      second = (totalSecond % 60).truncate(); // 11
-      totalMinute = (totalSecond / 60).truncate(); // 61
-    } else {
-      second = totalSecond;
-    }
-    if (totalMinute > 59) {
-      minute = (totalMinute % 60).truncate(); // 1
-    } else {
-      minute = totalMinute;
-    }
-
-    result += minute.toString().padLeft(2, '0');
-    result += ':' + second.toString().padLeft(2, '0');
-    result += "." + millisecond.toString().padLeft(3, '0').substring(0, 2);
-
-    return result;
   }
 
   @override

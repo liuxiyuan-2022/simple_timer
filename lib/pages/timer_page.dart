@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
@@ -19,12 +18,6 @@ class TimerPage extends GetView<TimerController> {
 
     return MainPageTemplate(
       appBarTitle: "timer_page".tr,
-      // appBarActions: [
-      //   // IconButton(
-      //   //   onPressed: () {},
-      //   //   icon: const FaIcon(FontAwesomeIcons.ellipsis),
-      //   // ).marginOnly(right: 10)
-      // ],
       child: SizedBox(
         width: context.width,
         height: context.height,

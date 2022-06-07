@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
+import 'package:simple_timer/controller/timer_list_controller.dart';
 
 class MainTextField extends StatefulWidget {
   const MainTextField({Key? key}) : super(key: key);
@@ -47,8 +48,9 @@ class _MainTextFieldState extends State<MainTextField>
         ),
       ),
       child: TextField(
+        // autofocus: true,
         textAlignVertical: TextAlignVertical.center, // 垂直居中对齐
-        controller: TimerController.to.editController,
+        controller: TimerListController.to.editController,
         focusNode: _focusNodeUser,
         cursorColor:
             Theme.of(context).toggleableActiveColor.withOpacity(.3), // 光标颜色
@@ -75,7 +77,7 @@ class _MainTextFieldState extends State<MainTextField>
             icon: Icon(Icons.clear, color: Colors.grey[400], size: 20),
             onPressed: () {
               // 清空字符串
-              TimerController.to.editController.clear();
+              TimerListController.to.editController.clear();
             },
           ),
         ),
@@ -89,7 +91,7 @@ class _MainTextFieldState extends State<MainTextField>
     WidgetsBinding.instance!.removeObserver(this);
     TimerController.to.isShowKeyboard.value = false;
     // 初始化控制器
-    TimerController.to.editController.clear();
+    TimerListController.to.editController.clear();
     super.dispose();
   }
 }

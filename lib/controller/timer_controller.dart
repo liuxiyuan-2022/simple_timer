@@ -22,9 +22,6 @@ class TimerController extends GetxController
   late Animation animation;
   late AnimationController animationController;
 
-  /// 输入框控制器
-  TextEditingController editController = TextEditingController();
-
   /// 是否正在计时
   var isTiming = false.obs;
 
@@ -46,21 +43,8 @@ class TimerController extends GetxController
   /// 计时器总时长 /秒
   var totalTime = 0.obs;
 
-  /// 计时器列表
-  ///
-  /// 如: [ ['00:15:00', '洗衣服'],['add] ]
-  List<List<String>> timerList = [];
-
   /// 键盘是否弹出?
   var isShowKeyboard = false.obs;
-
-  /// 计时器时间列表的时间预设值
-  var timerListHour = 0.obs;
-  var timerListMinute = 0.obs;
-  var timerListSecond = 0.obs;
-
-  /// 计时器列表控制器
-  var timerListController = ScrollController();
 
   @override
   void onInit() async {
@@ -81,9 +65,6 @@ class TimerController extends GetxController
     // prefs.clear();
     // 初始化计时时间
     initTimer();
-
-    // 初始化计时器列表
-    initTimerList();
   }
 
   /// 开始计时
@@ -181,106 +162,10 @@ class TimerController extends GetxController
     timerSecond.value = int.parse(timeItems[2]);
   }
 
-  /*
-    -----计时器预设-----
-  */
-
-  /// 更改计时器预设时间
-  void changeTimerListTime(int index) {
-    String result = DataUtil.timeToString(
-      timerListHour.value,
-      timerListMinute.value,
-      timerListSecond.value,
-    );
-    timerList[index][0] = result;
-
-    // 刷新列表
-    update(['timerList']);
-    saveTimerList();
-  }
-
-  /// 重命名计时器预设标签
-  void renameTimerTag(int index) {
-    timerList[index][1] = editController.text;
-    update(['timerList']);
-    saveTimerList();
-  }
-
-  /// 删除计时器预设
-  void removeTimer(int index) {
-    GetNotification.showCustomBottomSheet(
-      title: 'remove_timer'.tr,
-      confirmTitle: 'remove'.tr,
-      confirmOnTap: () {
-        timerList.removeAt(index);
-        saveTimerList();
-        update(['timerList']);
-        while (Get.isBottomSheetOpen!) {
-          Get.back();
-        }
-      },
-    );
-  }
-
-  /// 添加计时器预设
-  void addTimer() {
-    String timeStr = DataUtil.timeToString(
-      timerListHour.value,
-      timerListMinute.value,
-      timerListSecond.value,
-    );
-    String timerTag = editController.text == '' ? 'timer' : editController.text;
-
-    timerList.insert(0, [timeStr, timerTag]);
-    update(['timerList']);
-    saveTimerList();
-  }
-
-  /// 保存计时器预设列表
-  void saveTimerList() async {
-    int index = 0;
-    for (var item in timerList) {
-      await prefs.setStringList('timerList_$index', item);
-      await prefs.setInt('timerListLength', timerList.length);
-      index++;
-    }
-  }
-
-  /// 初始化计时器预设列表
-  void initTimerList() {
-    int length = prefs.getInt('timerListLength') ?? 0;
-    if (length == 0) {
-      timerList = [
-        ['add']
-      ];
-    } else {
-      for (var i = 0; i < length; i++) {
-        List<String> value = prefs.getStringList('timerList_$i')!;
-        timerList.add(value);
-      }
-    }
-    update(['timerList']);
-  }
-
-  /// 使用计时器预设
-  void applyTimerListInfo(int index) {
-    timerHour.value = int.parse(timerList[index][0].split(":")[0]);
-    timerMinute.value = int.parse(timerList[index][0].split(':')[1]);
-    timerSecond.value = int.parse(timerList[index][0].split(':')[2]);
-    timerTag.value = timerList[index][1];
-  }
-
-  /// 初始化timerPicker的时间
-  void initTimerPicker(int index) {
-    timerListHour.value = int.parse(timerList[index][0].split(':')[0]);
-    timerListMinute.value = int.parse(timerList[index][0].split(':')[1]);
-    timerListSecond.value = int.parse(timerList[index][0].split(':')[2]);
-  }
-
   @override
   void onClose() async {
     super.onClose();
-    saveTimerList();
+    // saveTimerList();
     animationController.dispose();
     await stopWatchTimer.dispose();
   }

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/settings_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
+import 'package:simple_timer/controller/timer_list_controller.dart';
 import 'package:simple_timer/widgets/bottom_sheet_box.dart';
 import 'package:simple_timer/widgets/main_text_field.dart';
 import 'package:simple_timer/widgets/timer_picker.dart';
@@ -52,7 +53,9 @@ class GetNotification {
     );
   }
 
-  /// 显示自定义GetbottomSheet
+  /// 显示自定义的GetBottomSheet
+  ///
+  /// [isfixedButton] 当键盘调出时是否固定<确认>和<取消>按钮 默认false
   static Future<T?> showCustomBottomSheet<T>({
     required String title,
     String? message,
@@ -60,118 +63,116 @@ class GetNotification {
     Color? confirmBorderColor,
     Color? confirmTextColor,
     String? cancelTitle,
-    // Color? cancelBorderColor,
     Color? cancelTextColor,
     Function()? confirmOnTap,
     Function()? cancelOnTap,
     List<Widget> children = const <Widget>[],
-
-    /// 当键盘调出时隐藏<确认>和<取消>按钮
-    bool heightAdaptation = true,
+    bool? isfixedButton,
   }) {
+    TimerController.to.isShowKeyboard.value = false; // 先初始化值, 避免出现bug
     return Get.bottomSheet(
-      Obx(
-        () => BottomSheetBox(
-          children: [
-            // 标题
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(Get.context!).primaryColor,
-              ),
-            ).marginOnly(bottom: 15),
-            // 内容
-            Visibility(
-              visible: message == null ? false : true,
-              child: Text(
-                message ?? '',
+      Obx(() => BottomSheetBox(
+            children: [
+              // 标题
+              Text(
+                title,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey[400],
+                  color: Theme.of(Get.context!).primaryColor,
                 ),
-              ),
-            ),
-            // 组件
-            Visibility(
-              visible: children.isEmpty ? false : true,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: children,
-              ),
-            ),
-            // 如果打开键盘就隐藏按钮
-            // 确定按钮
-            Visibility(
-              visible: heightAdaptation
-                  ? (TimerController.to.isShowKeyboard.value ? false : true)
-                  : true.obs.value,
-              maintainAnimation: true,
-              maintainSize: true,
-              maintainState: true,
-              child: TextButton(
-                onPressed: confirmOnTap,
-                child: Container(
-                  width: 175,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(
-                      color: confirmBorderColor ??
-                          Theme.of(Get.context!).toggleableActiveColor,
-                      width: 3,
-                    ),
-                  ),
-                  child: Text(
-                    confirmTitle ?? 'confirm'.tr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: confirmTextColor ??
-                          Theme.of(Get.context!).toggleableActiveColor,
-                      fontSize: 16,
-                      height: 1.1,
-                    ),
-                  ).marginOnly(top: 12.5, bottom: 12.5),
-                ),
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                ),
-              ).marginOnly(bottom: 5, top: 20),
-            ),
-            // 取消按钮
-            Visibility(
-              visible: heightAdaptation
-                  ? (TimerController.to.isShowKeyboard.value ? false : true)
-                  : true.obs.value,
-              child: TextButton(
-                onPressed: cancelOnTap ??
-                    () {
-                      // 关闭弹窗
-                      while (Get.isBottomSheetOpen!) {
-                        Get.back();
-                      }
-                    },
-                child: SizedBox(
-                  width: 200,
-                  child: Text(
-                    cancelTitle ?? 'cancel'.tr,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: cancelTextColor ??
-                          Theme.of(Get.context!).primaryColor,
-                      fontSize: 16,
-                      height: 1.1,
-                    ),
+              ).marginOnly(bottom: 15),
+              // 内容
+              Visibility(
+                visible: message == null ? false : true,
+                child: Text(
+                  message ?? '',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[400],
                   ),
                 ),
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+              ),
+              // 组件
+              Visibility(
+                visible: children.isEmpty ? false : true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: children,
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+              // 如果打开键盘就隐藏按钮
+              // 确定按钮
+              Visibility(
+                visible: TimerController.to.isShowKeyboard.value
+                    ? (isfixedButton ?? false)
+                    : true,
+                maintainAnimation: true,
+                maintainSize: true,
+                maintainState: true,
+                child: TextButton(
+                  onPressed: confirmOnTap,
+                  child: Container(
+                    width: 175,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(
+                        color: confirmBorderColor ??
+                            Theme.of(Get.context!).toggleableActiveColor,
+                        width: 3,
+                      ),
+                    ),
+                    child: Text(
+                      confirmTitle ?? 'confirm'.tr,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: confirmTextColor ??
+                            Theme.of(Get.context!).toggleableActiveColor,
+                        fontSize: 16,
+                        height: 1.1,
+                      ),
+                    ).marginOnly(top: 12.5, bottom: 12.5),
+                  ),
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  ),
+                ).marginOnly(bottom: 5, top: 20),
+              ),
+              // 取消按钮
+              Visibility(
+                visible: TimerController.to.isShowKeyboard.value
+                    ? (isfixedButton ?? false)
+                    : true,
+                maintainAnimation: true,
+                maintainSize: true,
+                maintainState: true,
+                child: TextButton(
+                  onPressed: cancelOnTap ??
+                      () {
+                        // 关闭弹窗
+                        while (Get.isBottomSheetOpen!) {
+                          Get.back();
+                        }
+                      },
+                  child: SizedBox(
+                    width: 200,
+                    child: Text(
+                      cancelTitle ?? 'cancel'.tr,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: cancelTextColor ??
+                            Theme.of(Get.context!).primaryColor,
+                        fontSize: 16,
+                        height: 1.1,
+                      ),
+                    ),
+                  ),
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  ),
+                ),
+              ),
+            ],
+          )),
       barrierColor: Colors.black12,
     );
   }
@@ -327,7 +328,7 @@ class GetNotification {
       BottomSheetBox(
         direction: Axis.horizontal,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+        padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
         children: [
           // 重命名
           InkWell(
@@ -369,7 +370,7 @@ class GetNotification {
 
           // 删除
           InkWell(
-            onTap: () => TimerController.to.removeTimer(index),
+            onTap: () => TimerListController.to.removeTimer(index),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -395,17 +396,19 @@ class GetNotification {
           ),
         ],
       ),
-      barrierColor: Colors.black12,
+      barrierColor: SettingsController.to.isDarkMode.value
+          ? Colors.transparent
+          : Colors.black12,
     );
   }
 
   ///  显时计时器预设时间编辑框 <修改时间>
   static Future<T?> showEditTimeBottomSheet<T>(int index) {
-    TimerController.to.initTimerPicker(index);
+    TimerListController.to.initTimerPicker(index);
     return showCustomBottomSheet(
       title: 'change_time'.tr,
       confirmOnTap: () {
-        TimerController.to.changeTimerListTime(index);
+        TimerListController.to.changeTimerListTime(index);
         while (Get.isBottomSheetOpen!) {
           Get.back();
         }
@@ -414,9 +417,9 @@ class GetNotification {
       confirmTextColor: Theme.of(Get.context!).primaryColor,
       children: [
         TimerPicker(
-          hourValue: TimerController.to.timerListHour,
-          minuteValue: TimerController.to.timerListMinute,
-          secondValue: TimerController.to.timerListSecond,
+          hourValue: TimerListController.to.timerListHour,
+          minuteValue: TimerListController.to.timerListMinute,
+          secondValue: TimerListController.to.timerListSecond,
           scale: .8,
         ),
       ],
@@ -425,18 +428,20 @@ class GetNotification {
 
   ///  显时计时器预设标签编辑框 <修改标签>
   static Future<T?> showRenameTagBottomSheet<T>(int index) {
-    TimerController.to.initTimerPicker(index);
+    TimerListController.to.initTimerPicker(index);
+    TimerListController.to.editController.text =
+        TimerListController.to.timerList[index][1];
     return showCustomBottomSheet(
-      title: 'change_tag'.tr,
+      title: 'rename'.tr,
       confirmOnTap: () {
-        TimerController.to.renameTimerTag(index);
+        TimerListController.to.renameTimerTag(index);
         while (Get.isBottomSheetOpen!) {
           Get.back();
         }
       },
       confirmBorderColor: Theme.of(Get.context!).primaryColor,
       confirmTextColor: Theme.of(Get.context!).primaryColor,
-      heightAdaptation: false,
+      isfixedButton: true,
       children: [
         const MainTextField().marginOnly(top: 10),
       ],
@@ -449,16 +454,16 @@ class GetNotification {
       title: 'add_timer'.tr,
       confirmTitle: 'add'.tr,
       confirmOnTap: () {
-        TimerController.to.addTimer();
+        TimerListController.to.addTimer();
         while (Get.isBottomSheetOpen!) {
           Get.back();
         }
       },
       children: [
         TimerPicker(
-          hourValue: TimerController.to.timerListHour,
-          minuteValue: TimerController.to.timerListMinute,
-          secondValue: TimerController.to.timerListSecond,
+          hourValue: TimerListController.to.timerListHour,
+          minuteValue: TimerListController.to.timerListMinute,
+          secondValue: TimerListController.to.timerListSecond,
           scale: .8,
         ),
         const MainTextField().marginOnly(top: 10),
