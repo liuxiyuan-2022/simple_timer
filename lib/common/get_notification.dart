@@ -92,7 +92,7 @@ class GetNotification {
                   ),
                 ),
               ),
-              // 组件
+              // 自定义组件
               Visibility(
                 visible: children.isEmpty ? false : true,
                 child: Column(
@@ -100,8 +100,7 @@ class GetNotification {
                   children: children,
                 ),
               ),
-              // 如果打开键盘就隐藏按钮
-              // 确定按钮
+              // <确认> <取消>按钮
               Visibility(
                 visible: TimerController.to.isShowKeyboard.value
                     ? (isfixedButton ?? false)
@@ -109,66 +108,64 @@ class GetNotification {
                 maintainAnimation: true,
                 maintainSize: true,
                 maintainState: true,
-                child: TextButton(
-                  onPressed: confirmOnTap,
-                  child: Container(
-                    width: 175,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                        color: confirmBorderColor ??
-                            Theme.of(Get.context!).toggleableActiveColor,
-                        width: 3,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed: confirmOnTap,
+                      child: Container(
+                        width: 175,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: confirmBorderColor ??
+                                Theme.of(Get.context!).toggleableActiveColor,
+                            width: 3,
+                          ),
+                        ),
+                        child: Text(
+                          confirmTitle ?? 'confirm'.tr,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: confirmTextColor ??
+                                Theme.of(Get.context!).toggleableActiveColor,
+                            fontSize: 16,
+                            height: 1.1,
+                          ),
+                        ).marginOnly(top: 12.5, bottom: 12.5),
                       ),
-                    ),
-                    child: Text(
-                      confirmTitle ?? 'confirm'.tr,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: confirmTextColor ??
-                            Theme.of(Get.context!).toggleableActiveColor,
-                        fontSize: 16,
-                        height: 1.1,
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
                       ),
-                    ).marginOnly(top: 12.5, bottom: 12.5),
-                  ),
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  ),
-                ).marginOnly(bottom: 5, top: 20),
-              ),
-              // 取消按钮
-              Visibility(
-                visible: TimerController.to.isShowKeyboard.value
-                    ? (isfixedButton ?? false)
-                    : true,
-                maintainAnimation: true,
-                maintainSize: true,
-                maintainState: true,
-                child: TextButton(
-                  onPressed: cancelOnTap ??
-                      () {
-                        // 关闭弹窗
-                        while (Get.isBottomSheetOpen!) {
-                          Get.back();
-                        }
-                      },
-                  child: SizedBox(
-                    width: 200,
-                    child: Text(
-                      cancelTitle ?? 'cancel'.tr,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: cancelTextColor ??
-                            Theme.of(Get.context!).primaryColor,
-                        fontSize: 16,
-                        height: 1.1,
+                    ).marginOnly(bottom: 5, top: 20),
+                    TextButton(
+                      onPressed: cancelOnTap ??
+                          () {
+                            // 关闭弹窗
+                            while (Get.isBottomSheetOpen!) {
+                              Get.back();
+                            }
+                          },
+                      child: SizedBox(
+                        width: 200,
+                        child: Text(
+                          cancelTitle ?? 'cancel'.tr,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: cancelTextColor ??
+                                Theme.of(Get.context!).primaryColor,
+                            fontSize: 16,
+                            height: 1.1,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  ),
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ],

@@ -12,24 +12,20 @@ class TimerListController extends GetxController {
   /// 持久化
   late SharedPreferences prefs;
 
-  /// 列表滚动控制器
-  ScrollController listScrollController = ScrollController();
+  /// 输入框控制器
+  TextEditingController editController = TextEditingController();
 
   /// 计时器列表
-  ///
   /// 如: [ ['00:15:00', '洗衣服'],['add] ]
   List<List<String>> timerList = [];
 
   /// 计时器列表Page页数
-  var pageCount = 0.obs;
+  var pageCount = 1.obs;
 
   /// 计时器时间列表的时间预设值
   var timerListHour = 0.obs;
   var timerListMinute = 0.obs;
   var timerListSecond = 0.obs;
-
-  /// 输入框控制器
-  TextEditingController editController = TextEditingController();
 
   @override
   void onInit() async {
@@ -60,9 +56,7 @@ class TimerListController extends GetxController {
         timerList.add(value);
       }
     }
-
     pageCount.value = (timerList.length / 6).ceil(); // 向上取整
-
     update(['timerList']);
   }
 
@@ -73,12 +67,10 @@ class TimerListController extends GetxController {
       timerListMinute.value,
       timerListSecond.value,
     );
-    String timerTag = editController.text == '' ? 'timer' : editController.text;
-
-    timerList.insert(0, [timeStr, timerTag]);
-
+    String timerTag =
+        editController.text == '' ? 'timer'.tr : editController.text;
+    timerList.insert(timerList.length - 1, [timeStr, timerTag]);
     saveTimerList();
-    update(['timerList']);
   }
 
   /// 更改计时器预设时间
@@ -89,17 +81,13 @@ class TimerListController extends GetxController {
       timerListSecond.value,
     );
     timerList[index][0] = result;
-
     saveTimerList();
-    // 刷新列表
-    update(['timerList']);
   }
 
   /// 重命名计时器预设标签
   void renameTimerTag(int index) {
     timerList[index][1] = editController.text;
     saveTimerList();
-    update(['timerList']);
   }
 
   /// 删除计时器预设
@@ -110,7 +98,6 @@ class TimerListController extends GetxController {
       confirmOnTap: () {
         timerList.removeAt(index);
         saveTimerList();
-        update(['timerList']);
         while (Get.isBottomSheetOpen!) {
           Get.back();
         }
@@ -127,6 +114,8 @@ class TimerListController extends GetxController {
       index++;
     }
     pageCount.value = (timerList.length / 6).ceil(); // 向上取整
+    // 更新列表
+    update(['timerList']);
   }
 
   /// 使用计时器预设
