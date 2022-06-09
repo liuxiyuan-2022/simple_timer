@@ -11,7 +11,10 @@ class AboutPage extends GetView<AboutController> {
     Get.put(AboutController());
     return OtherPageTemplate(
       appTitle: 'about'.tr,
-      body: Container(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [],
+      ),
     );
   }
 }

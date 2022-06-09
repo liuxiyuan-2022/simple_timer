@@ -6,11 +6,11 @@ class OtherPageTemplate extends StatelessWidget {
   const OtherPageTemplate({
     Key? key,
     required this.appTitle,
-    required this.body,
+    required this.child,
   }) : super(key: key);
 
   final String appTitle;
-  final Widget body;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class OtherPageTemplate extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: body.marginOnly(top: 20),
+        child: child.marginOnly(top: 20),
       ),
     );
   }

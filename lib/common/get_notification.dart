@@ -193,7 +193,7 @@ class GetNotification {
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: AppLanguage.values.length,
-              itemExtent: 50,
+              itemExtent: 45,
               padding: const EdgeInsets.only(left: 5, right: 5),
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
@@ -261,7 +261,7 @@ class GetNotification {
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: DefaultRingtones.values.length,
-              itemExtent: 50,
+              itemExtent: 45,
               padding: const EdgeInsets.only(left: 5, right: 5),
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
