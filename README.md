@@ -10,24 +10,24 @@
 
 ```
 simple_timer
-├──	android
-├──	assets	// 资产文件夹: 存放fonts, icons, imgs, audios
-├──	ios
-├──	lib
-├──	test
-├──	web
+├──android
+├──assets	// 资产文件夹: 存放fonts, icons, imgs, audios
+├──ios
+├──lib
+├──test
+├──web
 ```
 
 `lib`文件夹下的目录: 
 
 ```
 lib
-├──	common
-├──	controller
-├──	l10n
-├──	pages
-├──	style
-├── widgets
+├──common
+├──controller
+├──l10n
+├──pages
+├──style
+├──widgets
 ```
 
 |   文件夹   |                  用处                   |
