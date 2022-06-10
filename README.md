@@ -27,7 +27,7 @@ lib
 ├──	l10n
 ├──	pages
 ├──	style
-├──	wwidgets
+├── widgets
 ```
 
 |   文件夹   |                  用处                   |
