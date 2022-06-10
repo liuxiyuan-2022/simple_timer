@@ -43,6 +43,8 @@ dependencies:
   shared_preferences: ^2.0.15
   smooth_page_indicator: ^1.0.0+2
   flutter_launcher_icons: ^0.9.3
+  glass_kit: ^2.0.1
+  url_launcher: ^6.1.2
 
 flutter_icons:
   android: "launcher_icon"

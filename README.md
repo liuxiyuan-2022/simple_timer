@@ -2,7 +2,7 @@
 
 > Flutter SDK : 2.6.0-11.0
 
-🕜基于Flutter的计时器App
+🕜 Flutter的计时器App
 
 
 
@@ -11,7 +11,7 @@
 ```
 simple_timer
 ├──android
-├──assets	// 资产文件夹: 存放fonts, icons, imgs, audios
+├──assets // 资产文件夹: 存放fonts, icons, imgs, audios
 ├──ios
 ├──lib
 ├──test
@@ -30,7 +30,7 @@ lib
 ├──widgets
 ```
 
-|   文件夹   |                  用处                   |
+|   文件夹   |                  描述                   |
 | :--------: | :-------------------------------------: |
 |   common   |           存放一些通用方法类            |
 | controller |               GetX控制器                |
@@ -38,7 +38,6 @@ lib
 |   pages    |          存放所有的路由页面类           |
 |   style    |               APP样式主题               |
 |  widgets   | APP内封装的一些Widget组件都在该文件夹下 |
-|            |                                         |
 
 
 
@@ -61,11 +60,36 @@ lib
 
 
 
+## Widgets
+
+|         组件          |                 描述                 |
+| :-------------------: | :----------------------------------: |
+|   DotNavigationBar    | 去除`dot_navigation_bar`插件的水波纹 |
+|   MainPageTemplate    |              主页面模板              |
+|    BottomSheetBox     |        BottomSheet的外框样式         |
+|     MainTextField     |                输入框                |
+|       SetOption       |       SettingPage的设置项外观        |
+|   StopWatchCounter    |            秒表时间计数器            |
+|   StopWatchLapList    |           秒表单圈时间列表           |
+| StopWatchStatusButton |   秒表 '开始/暂停/标记/重置' 按钮    |
+|   TimerFlipCounter    |           计时器时间计数器           |
+|       TimerList       |            计时器预设列表            |
+|      TimerPicker      |              时间选择器              |
+|    TimerScaleRing     |                 秒环                 |
+|   TimerStatusButton   |     计时器 '开始/暂停/重置' 按钮     |
+|                       |                                      |
+
+
+
 ## 更新日志
 
 > <font color=#70c000>新增</font>	<font color=#dbc693>修复</font>	<font color=##a1c6c9>优化</font>
 
 ---
+
+2022.6.10
+
+- <font color=#70c000>新增</font>  GitHub网页跳转
 
 2022.6.7
 

@@ -6,6 +6,7 @@ import 'package:simple_timer/controller/timer_list_controller.dart';
 import 'package:simple_timer/widgets/keep_alive_wrapper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+/// 计时器预设列表
 class TimerList extends GetView<TimerListController> {
   const TimerList({Key? key}) : super(key: key);
 

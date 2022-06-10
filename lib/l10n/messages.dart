@@ -41,6 +41,9 @@ class Messages extends Translations {
           'add': '添加',
           'input_content': '输入内容',
           'change_tag': '修改标签',
+          'update_logs': '更新日志',
+          'share_to_friends': '分享给好友',
+          'about_page_message': '基于Flutter的计时器App',
         },
         'en_US': {
           'timer_page': 'Timer',
@@ -76,6 +79,9 @@ class Messages extends Translations {
           'add': 'Add',
           'input_content': 'Input content',
           'change_tag': 'Change tag',
+          'update_logs': 'Update Logs',
+          'share_to_friends': 'Share to friends',
+          'about_page_message': 'Flutter based Timer App',
         }
       };
 }

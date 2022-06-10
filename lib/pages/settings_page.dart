@@ -142,7 +142,7 @@ class SettingsPage extends GetView<SettingsController> {
                     leading: FontAwesomeIcons.circleInfo,
                     title: 'about'.tr,
                     onTap: () => Get.to(
-                      const AboutPage(),
+                      () => const AboutPage(),
                       transition: Transition.rightToLeft,
                       duration: const Duration(milliseconds: 200),
                       curve: Curves.easeOut,

@@ -92,8 +92,8 @@ class SettingsController extends GetxController {
     if (true) {
       GetNotification.showToastSnakbar(
         'already_the_latest_version',
-        minWidth: 135,
-        maxWidth: 200,
+        minWidth: 145,
+        maxWidth: 210,
       );
     } else {
       // Get.bottomSheet(bottomsheet)

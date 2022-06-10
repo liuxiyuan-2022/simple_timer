@@ -28,7 +28,7 @@ class GetNotification {
           child: Text(
             message.tr,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               color: Theme.of(Get.context!).primaryColor,
               height: 1.1,
             ),
@@ -36,7 +36,7 @@ class GetNotification {
         ),
         maxWidth: Get.locale!.languageCode == 'zh' ? minWidth : maxWidth,
         margin: const EdgeInsets.only(top: 30),
-        padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         backgroundColor: Theme.of(Get.context!).cardColor,
         snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 3),
