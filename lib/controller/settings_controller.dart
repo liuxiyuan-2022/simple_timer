@@ -89,7 +89,7 @@ class SettingsController extends GetxController {
   /// 检查版本更新[点击]
   void checkVersion() {
     // ignore: dead_code
-    if (false) {
+    if (true) {
       GetNotification.showToastSnakbar(
         'already_the_latest_version',
         minWidth: 135,

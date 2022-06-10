@@ -48,6 +48,7 @@ class TimerList extends GetView<TimerListController> {
                     itemBuilder: (BuildContext context, int _index) {
                       // 当前页面的预设索引值初始值
                       int listIndex = pageIndex * 6;
+
                       if (controller.timerList[listIndex + _index][0] ==
                           'add') {
                         return KeepAliveWrapper(
