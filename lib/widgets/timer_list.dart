@@ -40,6 +40,8 @@ class TimerList extends GetView<TimerListController> {
                     itemCount: listCount,
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
+                    addAutomaticKeepAlives: false,
+                    addRepaintBoundaries: false,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       mainAxisSpacing: 10,
@@ -52,67 +54,61 @@ class TimerList extends GetView<TimerListController> {
 
                       if (controller.timerList[listIndex + _index][0] ==
                           'add') {
-                        return KeepAliveWrapper(
-                          keepAlive: true,
-                          child: InkWell(
-                            onTap: () {
-                              // 显示 添加计时器预设
-                              GetNotification.showAddTimerBottomSheet();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 5, right: 5),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(.1),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(15)),
-                              ),
-                              child: const Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.plus,
-                                  color: Colors.grey,
-                                ),
+                        return InkWell(
+                          onTap: () {
+                            // 显示 添加计时器预设
+                            GetNotification.showAddTimerBottomSheet();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 5, right: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(.1),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                            ),
+                            child: const Center(
+                              child: FaIcon(
+                                FontAwesomeIcons.plus,
+                                color: Colors.grey,
                               ),
                             ),
                           ),
                         );
                       } else {
-                        return KeepAliveWrapper(
-                          keepAlive: true,
-                          child: InkWell(
-                            onTap: () {
-                              controller.applyTimerListInfo(listIndex + _index);
-                            },
-                            onLongPress: () {
-                              GetNotification.showEditBar(listIndex + _index);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 5, right: 5),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(.1),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(15)),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    controller.timerList[listIndex + _index][1],
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 12,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ).marginOnly(bottom: 3),
-                                  Text(
-                                    controller.timerList[listIndex + _index][0],
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 12,
-                                    ),
+                        return InkWell(
+                          onTap: () {
+                            controller.applyTimerListInfo(listIndex + _index);
+                          },
+                          onLongPress: () {
+                            GetNotification.showEditBar(listIndex + _index);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 5, right: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(.1),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  controller.timerList[listIndex + _index][1],
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 12,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ],
-                              ),
+                                  textAlign: TextAlign.center,
+                                ).marginOnly(bottom: 3),
+                                Text(
+                                  controller.timerList[listIndex + _index][0],
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         );

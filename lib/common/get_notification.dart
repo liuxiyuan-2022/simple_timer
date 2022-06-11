@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/settings_controller.dart';
+import 'package:simple_timer/controller/text_field_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
 import 'package:simple_timer/controller/timer_list_controller.dart';
 import 'package:simple_timer/widgets/bottom_sheet_box.dart';
@@ -68,109 +69,98 @@ class GetNotification {
     Function()? cancelOnTap,
     List<Widget> children = const <Widget>[],
     bool? isfixedButton,
+
+    /// 点击背景是否可以关闭
+    bool? isDismissble,
   }) {
-    TimerController.to.isShowKeyboard.value = false; // 先初始化值, 避免出现bug
     return Get.bottomSheet(
-      Obx(() => BottomSheetBox(
-            children: [
-              // 标题
-              Text(
-                title,
+      BottomSheetBox(
+        children: [
+          // 标题
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(Get.context!).primaryColor,
+            ),
+          ).marginOnly(bottom: 15),
+          // 内容
+          Visibility(
+            visible: message == null ? false : true,
+            child: Text(
+              message ?? '',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[400],
+              ),
+            ),
+          ),
+          // 自定义组件
+          Visibility(
+            visible: children.isEmpty ? false : true,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ),
+          ),
+          TextButton(
+            onPressed: confirmOnTap,
+            child: Container(
+              width: 175,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: confirmBorderColor ??
+                      Theme.of(Get.context!).toggleableActiveColor,
+                  width: 3,
+                ),
+              ),
+              child: Text(
+                confirmTitle ?? 'confirm'.tr,
+                textAlign: TextAlign.center,
                 style: TextStyle(
+                  color: confirmTextColor ??
+                      Theme.of(Get.context!).toggleableActiveColor,
                   fontSize: 16,
-                  color: Theme.of(Get.context!).primaryColor,
+                  height: 1.1,
                 ),
-              ).marginOnly(bottom: 15),
-              // 内容
-              Visibility(
-                visible: message == null ? false : true,
-                child: Text(
-                  message ?? '',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[400],
-                  ),
-                ),
-              ),
-              // 自定义组件
-              Visibility(
-                visible: children.isEmpty ? false : true,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: children,
-                ),
-              ),
-              // <确认> <取消>按钮
-              Visibility(
-                visible: TimerController.to.isShowKeyboard.value
-                    ? (isfixedButton ?? false)
-                    : true,
-                maintainAnimation: true,
-                maintainSize: true,
-                maintainState: true,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      onPressed: confirmOnTap,
-                      child: Container(
-                        width: 175,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: confirmBorderColor ??
-                                Theme.of(Get.context!).toggleableActiveColor,
-                            width: 3,
-                          ),
-                        ),
-                        child: Text(
-                          confirmTitle ?? 'confirm'.tr,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: confirmTextColor ??
-                                Theme.of(Get.context!).toggleableActiveColor,
-                            fontSize: 16,
-                            height: 1.1,
-                          ),
-                        ).marginOnly(top: 12.5, bottom: 12.5),
-                      ),
-                      style: ButtonStyle(
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                      ),
-                    ).marginOnly(bottom: 5, top: 20),
-                    TextButton(
-                      onPressed: cancelOnTap ??
-                          () {
-                            // 关闭弹窗
-                            while (Get.isBottomSheetOpen!) {
-                              Get.back();
-                            }
-                          },
-                      child: SizedBox(
-                        width: 200,
-                        child: Text(
-                          cancelTitle ?? 'cancel'.tr,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: cancelTextColor ??
-                                Theme.of(Get.context!).primaryColor,
-                            fontSize: 16,
-                            height: 1.1,
-                          ),
-                        ),
-                      ),
-                      style: ButtonStyle(
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                      ),
-                    )
-                  ],
+              ).marginOnly(top: 12.5, bottom: 12.5),
+            ),
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(Colors.transparent),
+            ),
+          ).marginOnly(bottom: 5, top: 20),
+          TextButton(
+            onPressed: cancelOnTap ??
+                () {
+                  // 关闭弹窗
+                  while (Get.isBottomSheetOpen!) {
+                    Get.back();
+                  }
+                },
+            child: SizedBox(
+              width: 200,
+              child: Text(
+                cancelTitle ?? 'cancel'.tr,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: cancelTextColor ?? Theme.of(Get.context!).primaryColor,
+                  fontSize: 16,
+                  height: 1.1,
                 ),
               ),
-            ],
-          )),
+            ),
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all(Colors.transparent),
+            ),
+          )
+        ],
+      ),
+
+      ignoreSafeArea: true,
+      isScrollControlled: true, // 是否支持全屏弹出
       barrierColor: Colors.black12,
+      isDismissible: isDismissble ?? true,
     );
   }
 
@@ -425,8 +415,9 @@ class GetNotification {
 
   ///  显时计时器预设标签编辑框 <修改标签>
   static Future<T?> showRenameTagBottomSheet<T>(int index) {
+    Get.put(TextFieldController());
     TimerListController.to.initTimerPicker(index);
-    TimerListController.to.editController.text =
+    TextFieldController.to.editController.text =
         TimerListController.to.timerList[index][1];
     return showCustomBottomSheet(
       title: 'rename'.tr,
@@ -439,8 +430,9 @@ class GetNotification {
       confirmBorderColor: Theme.of(Get.context!).primaryColor,
       confirmTextColor: Theme.of(Get.context!).primaryColor,
       isfixedButton: true,
+      isDismissble: false,
       children: [
-        const MainTextField().marginOnly(top: 10),
+        const MainTextField(autofocus: true).marginOnly(top: 10),
       ],
     );
   }
@@ -456,6 +448,7 @@ class GetNotification {
           Get.back();
         }
       },
+      isDismissble: false,
       children: [
         TimerPicker(
           hourValue: TimerListController.to.timerListHour,

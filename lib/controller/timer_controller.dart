@@ -43,9 +43,6 @@ class TimerController extends GetxController
   /// 计时器总时长 /秒
   var totalTime = 0.obs;
 
-  /// 键盘是否弹出?
-  var isShowKeyboard = false.obs;
-
   @override
   void onInit() async {
     super.onInit();

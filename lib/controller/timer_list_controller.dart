@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_timer/common/data_util.dart';
 import 'package:simple_timer/common/get_notification.dart';
+import 'package:simple_timer/controller/text_field_controller.dart';
 import 'package:simple_timer/controller/timer_controller.dart';
 
 /// 计时器预设列表控制器
@@ -11,9 +12,6 @@ class TimerListController extends GetxController {
 
   /// 持久化
   late SharedPreferences prefs;
-
-  /// 输入框控制器
-  TextEditingController editController = TextEditingController();
 
   /// 计时器列表
   /// 如: [ ['00:15:00', '洗衣服'],['add] ]
@@ -67,8 +65,11 @@ class TimerListController extends GetxController {
       timerListMinute.value,
       timerListSecond.value,
     );
-    String timerTag =
-        editController.text == '' ? 'timer'.tr : editController.text;
+    String timerTag = 'timer'.tr;
+    if (TextFieldController.to.editController.text != '') {
+      timerTag = TextFieldController.to.editController.text;
+    }
+
     timerList.insert(timerList.length - 1, [timeStr, timerTag]);
     saveTimerList();
   }
@@ -86,7 +87,7 @@ class TimerListController extends GetxController {
 
   /// 重命名计时器预设标签
   void renameTimerTag(int index) {
-    timerList[index][1] = editController.text;
+    timerList[index][1] = TextFieldController.to.editController.text;
     saveTimerList();
   }
 

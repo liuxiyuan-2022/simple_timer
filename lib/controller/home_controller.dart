@@ -42,4 +42,5 @@ class HomeController extends GetxController {
   }
 }
 
+/// 主页面
 enum SelectedTab { home, stopWatch, settings }
