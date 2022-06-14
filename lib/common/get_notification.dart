@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -60,10 +61,10 @@ class GetNotification {
   static Future<T?> showCustomBottomSheet<T>({
     required String title,
     String? message,
-    String? confirmTitle,
+    String? confirmTitle, // 确认按钮标题
     Color? confirmBorderColor,
     Color? confirmTextColor,
-    String? cancelTitle,
+    String? cancelTitle, // 取消按钮标题
     Color? cancelTextColor,
     Function()? confirmOnTap,
     Function()? cancelOnTap,
@@ -470,6 +471,7 @@ class GetNotification {
         _seconds.value++;
       },
     );
+
     return Get.showSnackbar(
       GetSnackBar(
         titleText: Obx(
@@ -529,6 +531,7 @@ class GetNotification {
           switch (status) {
             case SnackbarStatus.OPENING:
               {
+                TimerController.to.showTimerNotification();
                 // 播放提示音
                 FlutterRingtonePlayer.play(
                   looping: true,
@@ -545,11 +548,14 @@ class GetNotification {
               {
                 // 如果开启手势控制, 须在此时调用关闭通知铃声
                 FlutterRingtonePlayer.stop();
+                AwesomeNotifications().cancel(1);
                 _timer.cancel();
                 break;
               }
             case SnackbarStatus.CLOSING:
               {
+                // 关闭后台通知
+                AwesomeNotifications().cancel(1);
                 FlutterRingtonePlayer.stop();
                 _timer.cancel();
                 break;

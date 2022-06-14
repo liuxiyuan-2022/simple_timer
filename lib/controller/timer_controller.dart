@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,55 @@ class TimerController extends GetxController
     // 初始化本地持久化
     prefs = await SharedPreferences.getInstance();
 
-    // 初始化tiemrScaleRing动画控制器
+    initTimer();
+    initAnimationController();
+    initNotification();
+  }
+
+  /// 初始化通知
+  void initNotification() {
+    // 为 actionButtons 创建监听事件
+    AwesomeNotifications().actionStream.listen((event) {
+      // 监测按钮的Key值
+      switch (event.buttonKeyPressed) {
+        case 'timer_confirm':
+          Get.closeAllSnackbars();
+          printInfo(info: 'OnTap');
+          break;
+        default:
+      }
+    });
+
+    AwesomeNotifications().initialize(
+      'resource://drawable/launcher_icon', // 自定义通知图标
+      [
+        NotificationChannel(
+          channelGroupKey: 'timer_channel_group', // 通知频道组Key
+          channelKey: 'timer_channel', // 通知频道Key
+          channelName: '计时器通知', // 通知频道名称
+          channelDescription: 'Notification channel for basic tests',
+          defaultColor: Colors.white,
+          enableVibration: false, // 是否启用震动
+          playSound: false, // 是否播放声音
+          ledColor: Colors.white,
+          locked: false, // 不允许手动关闭通知
+        )
+      ],
+      debug: true,
+    );
+  }
+
+  /// 初始化计时时间
+  void initTimer() async {
+    List<String> timeItems =
+        prefs.getStringList('lastTimer') ?? ['0', '5', '0'];
+    timerHour.value = int.parse(timeItems[0]);
+    timerMinute.value = int.parse(timeItems[1]);
+    timerSecond.value = int.parse(timeItems[2]);
+  }
+
+  /// 初始化tiemrScaleRing动画控制器
+  void initAnimationController() {
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -58,10 +107,27 @@ class TimerController extends GetxController
         .chain(CurveTween(curve: Curves.elasticOut))
         .animate(animationController)
       ..addListener(() => update());
+  }
 
-    // prefs.clear();
-    // 初始化计时时间
-    initTimer();
+  /// 显示倒计时结束后台通知
+  ///
+  /// id: 1
+  void showTimerNotification() {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1,
+        channelKey: 'timer_channel',
+        title: timerTag.value + '已到时',
+        notificationLayout: NotificationLayout.BigText,
+        displayOnForeground: true,
+      ),
+      actionButtons: <NotificationActionButton>[
+        NotificationActionButton(
+          key: 'timer_confirm',
+          label: '确定',
+        ),
+      ],
+    );
   }
 
   /// 开始计时
@@ -69,54 +135,69 @@ class TimerController extends GetxController
     late int _timerSecond;
     late int _timerMinute;
     late int _timerHour;
-    isTiming.value = true;
 
-    if (Get.isSnackbarOpen) {
-      Get.back();
-    }
+    /// 检查通知权限是否开启
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        // 询问是否开启权限
+        GetNotification.showCustomBottomSheet(
+          title: 'open_notification_permissions'.tr,
+          message: '计时器到时提醒需要通知权限, 请确保开启此权限',
+          confirmTitle: 'open'.tr,
+          confirmOnTap: () {
+            AwesomeNotifications().requestPermissionToSendNotifications();
+            Get.back();
+          },
+        );
+      } else {
+        isTiming.value = true;
+        Get.closeAllSnackbars();
 
-    // 保存计时时间
-    saveTimer();
+        // 保存下次计时默认时间
+        saveTimer();
 
-    // 将单位转化为秒
-    totalTime.value = DataUtil.timeToSecond(
-      timerHour.value,
-      timerMinute.value,
-      timerSecond.value,
-    );
+        // 将单位转化为秒
+        totalTime.value = DataUtil.timeToSecond(
+          timerHour.value,
+          timerMinute.value,
+          timerSecond.value,
+        );
 
-    // 创建计时器控制器
-    stopWatchTimer = StopWatchTimer(
-      mode: StopWatchMode.countDown, // 模式: 倒计时
-      presetMillisecond: StopWatchTimer.getMilliSecFromSecond(totalTime.value),
-      onChange: (v) {
-        _timerHour = int.parse(StopWatchTimer.getDisplayTimeHours(v));
-        _timerSecond = int.parse(StopWatchTimer.getDisplayTimeSecond(v));
+        // 创建计时器控制器
+        stopWatchTimer = StopWatchTimer(
+          mode: StopWatchMode.countDown, // 模式: 倒计时
+          presetMillisecond:
+              StopWatchTimer.getMilliSecFromSecond(totalTime.value),
+          onChange: (v) {
+            _timerHour = int.parse(StopWatchTimer.getDisplayTimeHours(v));
+            _timerSecond = int.parse(StopWatchTimer.getDisplayTimeSecond(v));
 
-        // 防止出现当 hour > 0 时 minute = hour + minute 的bug
-        if (_timerHour != 0) {
-          _timerMinute = int.parse(StopWatchTimer.getDisplayTimeMinute(v)) -
-              _timerHour * 60;
-        } else {
-          _timerMinute = int.parse(StopWatchTimer.getDisplayTimeMinute(v));
-        }
-      },
-      onChangeRawSecond: (v) {
-        timerSecond.value = _timerSecond;
-        timerMinute.value = _timerMinute;
-        timerHour.value = _timerHour;
-      },
+            // 防止出现当 hour > 0 时 minute = hour + minute 的bug
+            if (_timerHour != 0) {
+              _timerMinute = int.parse(StopWatchTimer.getDisplayTimeMinute(v)) -
+                  _timerHour * 60;
+            } else {
+              _timerMinute = int.parse(StopWatchTimer.getDisplayTimeMinute(v));
+            }
+          },
+          onChangeRawSecond: (v) {
+            timerSecond.value = _timerSecond;
+            timerMinute.value = _timerMinute;
+            timerHour.value = _timerHour;
+          },
 
-      // 计时停止时调用:
-      onEnded: () {
-        stopTimer();
-        GetNotification.showTimerToast();
-        initTimer();
-      },
-    );
+          // 计时停止时调用:
+          onEnded: () {
+            stopTimer();
+            GetNotification.showTimerToast();
+            initTimer();
+          },
+        );
 
-    stopWatchTimer.onExecute.add(StopWatchExecute.start); // 启动计时器
-    animationController.repeat(); // 播放时刻环动画
+        stopWatchTimer.onExecute.add(StopWatchExecute.start); // 启动计时器
+        animationController.repeat(); // 播放时刻环动画
+      }
+    });
   }
 
   /// 暂停计时
@@ -148,15 +229,6 @@ class TimerController extends GetxController
     String _m = timerMinute.value.toString();
     String _s = timerSecond.value.toString();
     await prefs.setStringList('lastTimer', <String>[_h, _m, _s]);
-  }
-
-  /// 初始化计时时间
-  void initTimer() async {
-    List<String> timeItems =
-        prefs.getStringList('lastTimer') ?? ['0', '5', '0'];
-    timerHour.value = int.parse(timeItems[0]);
-    timerMinute.value = int.parse(timeItems[1]);
-    timerSecond.value = int.parse(timeItems[2]);
   }
 
   @override

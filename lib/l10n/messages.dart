@@ -44,6 +44,8 @@ class Messages extends Translations {
           'update_logs': '更新日志',
           'share_to_friends': '分享给好友',
           'about_page_message': '基于Flutter的计时器App',
+          'open': "开启",
+          'open_notification_permissions': '开启通知权限',
         },
         'en_US': {
           'timer_page': 'Timer',
@@ -82,6 +84,8 @@ class Messages extends Translations {
           'update_logs': 'Update Logs',
           'share_to_friends': 'Share to friends',
           'about_page_message': 'Flutter based Timer App',
+          'open': 'Open',
+          'open_notification_permissions': 'Open notification permissions',
         }
       };
 }

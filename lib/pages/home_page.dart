@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/controller/home_controller.dart';
+import 'package:simple_timer/controller/timer_controller.dart';
 import 'package:simple_timer/pages/stop_watch_page.dart';
 import 'package:simple_timer/pages/settings_page.dart';
 import 'package:simple_timer/pages/timer_page.dart';
