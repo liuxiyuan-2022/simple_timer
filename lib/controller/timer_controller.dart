@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_timer/common/color_util.dart';
 import 'package:simple_timer/common/data_util.dart';
 import 'package:simple_timer/common/get_notification.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -63,7 +64,6 @@ class TimerController extends GetxController
       switch (event.buttonKeyPressed) {
         case 'timer_confirm':
           Get.closeAllSnackbars();
-          printInfo(info: 'OnTap');
           break;
         default:
       }
@@ -73,15 +73,15 @@ class TimerController extends GetxController
       'resource://drawable/launcher_icon', // 自定义通知图标
       [
         NotificationChannel(
-          channelGroupKey: 'timer_channel_group', // 通知频道组Key
           channelKey: 'timer_channel', // 通知频道Key
+          channelGroupKey: 'timer_channel_group', // 通知频道组Key
           channelName: '计时器通知', // 通知频道名称
           channelDescription: 'Notification channel for basic tests',
-          defaultColor: Colors.white,
           enableVibration: false, // 是否启用震动
           playSound: false, // 是否播放声音
-          ledColor: Colors.white,
           locked: false, // 不允许手动关闭通知
+          importance: NotificationImportance.Max,
+          channelShowBadge: true,
         )
       ],
       debug: true,
@@ -109,17 +109,23 @@ class TimerController extends GetxController
       ..addListener(() => update());
   }
 
-  /// 显示倒计时结束后台通知
+  /// 创建计时器后台通知
   ///
   /// id: 1
-  void showTimerNotification() {
-    AwesomeNotifications().createNotification(
+  Future<void> createTimerNotification() async {
+    await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 1,
         channelKey: 'timer_channel',
         title: timerTag.value + '已到时',
         notificationLayout: NotificationLayout.BigText,
-        displayOnForeground: true,
+        displayOnForeground: false,
+        displayOnBackground: true,
+        wakeUpScreen: true,
+        fullScreenIntent: true,
+        category: NotificationCategory.Message,
+        locked: true,
+        color: ColorUtil.hex('#bab9ba'),
       ),
       actionButtons: <NotificationActionButton>[
         NotificationActionButton(
@@ -144,10 +150,15 @@ class TimerController extends GetxController
           title: 'open_notification_permissions'.tr,
           message: '计时器到时提醒需要通知权限, 请确保开启此权限',
           confirmTitle: 'open'.tr,
-          confirmOnTap: () {
-            AwesomeNotifications().requestPermissionToSendNotifications();
-            Get.back();
-          },
+          confirmOnTap: () =>
+              AwesomeNotifications().requestPermissionToSendNotifications(
+            permissions: [
+              NotificationPermission.Alert,
+              NotificationPermission.Badge,
+              NotificationPermission.Light,
+              NotificationPermission.FullScreenIntent,
+            ],
+          ).then((_) => Get.back()),
         );
       } else {
         isTiming.value = true;

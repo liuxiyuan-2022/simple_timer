@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_timer/common/get_notification.dart';
@@ -90,11 +91,11 @@ class SettingsController extends GetxController {
   void checkVersion() {
     // ignore: dead_code
     if (true) {
-      GetNotification.showToastSnakbar(
-        'already_the_latest_version',
-        minWidth: 145,
-        maxWidth: 210,
+      GetNotification.showToast(
+        message: 'already_the_latest_version'.tr,
       );
+      printInfo(info: 'jel');
+      // ignore: dead_code
     } else {
       // Get.bottomSheet(bottomsheet)
       GetNotification.showCustomBottomSheet(

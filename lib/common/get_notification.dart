@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:simple_timer/common/color_util.dart';
@@ -15,42 +16,40 @@ import 'package:simple_timer/widgets/timer_picker.dart';
 
 /// 自定义Get的通知组件
 class GetNotification {
-  /// 显示Toast
-  ///
-  /// [maxWidth],[minWidth]用于适配中文和英文文字长度
-  static SnackbarController showToastSnakbar(
-    String message, {
-    required double maxWidth,
-    required double minWidth,
+  /// 显示自定义Toast
+  static showToast({
+    required String message,
   }) {
-    Get.closeAllSnackbars();
-    return Get.showSnackbar(
-      GetSnackBar(
-        messageText: Center(
-          child: Text(
-            message.tr,
-            style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(Get.context!).primaryColor,
-              height: 1.1,
+    FToast fToast = FToast();
+
+    // 清除Toast
+    fToast.removeQueuedCustomToasts();
+
+    // 提供overlay的上下文
+    fToast.init(Get.overlayContext!);
+
+    fToast.showToast(
+      toastDuration: const Duration(seconds: 2),
+      gravity: ToastGravity.TOP,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+        decoration: BoxDecoration(
+          color: Theme.of(Get.context!).cardColor,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(.1),
+              blurRadius: 20,
             ),
+          ],
+        ),
+        child: Text(
+          message,
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(Get.context!).primaryColor,
           ),
         ),
-        maxWidth: Get.locale!.languageCode == 'zh' ? minWidth : maxWidth,
-        margin: const EdgeInsets.only(top: 30),
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        backgroundColor: Theme.of(Get.context!).cardColor,
-        snackPosition: SnackPosition.TOP,
-        duration: const Duration(seconds: 3),
-        borderRadius: 15,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(.1),
-            offset: const Offset(0, 2),
-            spreadRadius: 5,
-            blurRadius: 10,
-          ),
-        ],
       ),
     );
   }
@@ -531,7 +530,7 @@ class GetNotification {
           switch (status) {
             case SnackbarStatus.OPENING:
               {
-                TimerController.to.showTimerNotification();
+                TimerController.to.createTimerNotification();
                 // 播放提示音
                 FlutterRingtonePlayer.play(
                   looping: true,

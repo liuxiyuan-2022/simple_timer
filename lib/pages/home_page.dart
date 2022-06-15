@@ -71,6 +71,10 @@ class HomePage extends GetView<HomeController> {
               ],
             ),
           ).paddingOnly(bottom: 10),
+          // floatingActionButton: FloatingActionButton(onPressed: () {
+          //   Get.put(TimerController());
+          //   TimerController.to.createTimerNotification();
+          // }),
         );
       },
     );
